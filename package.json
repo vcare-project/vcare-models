@@ -1,0 +1,16 @@
+{
+  "name": "vcare-models",
+  "version": "1.0.0",
+  "description": "Ontologies and related infrastructure for vCare project.",
+  "main": "index.js",
+  "repository": "https://github.com/vcare-project/vcare-models.git",
+  "author": "Viliam Simko <viliam.simko@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.11.0",
+    "rdflib": "^0.16.3"
+  },
+  "devDependencies": {
+    "generate-changelog": "^1.5.0"
+  }
+}
