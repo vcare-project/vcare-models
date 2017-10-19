@@ -6,6 +6,8 @@
 # Reasoning and RDF stores
 - we need some reasoning to be automatically avaialable within the store
 - at the moment, it is not clear which "regime" is needed
+- Some reasoners:
+  - http://www.hermit-reasoner.com/
 
 # RDF stores
 - we tried Jena+Fusek inside docker `docker run -p 3030:3030 stain/jena-fuseki`
