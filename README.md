@@ -12,3 +12,9 @@
 # RDF stores
 - we tried Jena+Fusek inside docker `docker run -p 3030:3030 stain/jena-fuseki`
 - there are 3 inferencing regimes supported but it requires some special configuration
+
+# Existing ontologies and taxonomies
+- **Ontology** ~ schema or meta-model (e.g. Sensor, Device, Platform ...)
+- **Taxonomy** ~ some predefined instances (e.g. what quantities can a sensor measure - air pressure, temperature ... )
+
+- http://iot.ee.surrey.ac.uk/fiware/ontologies/iot-lite/iot-taxo#
