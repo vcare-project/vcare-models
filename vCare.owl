@@ -1,0 +1,1789 @@
+@prefix : <http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/merkle/ontologies/2017/11/vCare> .
+
+<http://www.semanticweb.org/merkle/ontologies/2017/11/vCare> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled
+<http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#consult
+:consult rdf:type owl:ObjectProperty ;
+         rdfs:range [ rdf:type owl:Restriction ;
+                      owl:onProperty :consult ;
+                      owl:someValuesFrom :Physician
+                    ] .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasActivity
+:hasActivity rdf:type owl:ObjectProperty ;
+             rdfs:range [ rdf:type owl:Restriction ;
+                          owl:onProperty :hasActivity ;
+                          owl:someValuesFrom :Activity
+                        ] .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasBodyConstitution
+:hasBodyConstitution rdf:type owl:ObjectProperty ;
+                     rdfs:domain [ rdf:type owl:Restriction ;
+                                   owl:onProperty :hasBodyConstitution ;
+                                   owl:someValuesFrom :Patient
+                                 ] .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasDisease
+:hasDisease rdf:type owl:ObjectProperty ;
+            rdfs:subPropertyOf :hasNoDisease ;
+            rdfs:domain [ rdf:type owl:Restriction ;
+                          owl:onProperty :hasDisease ;
+                          owl:someValuesFrom :Patient
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :hasDisease ;
+                          owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                          owl:onClass :Patient
+                        ] ;
+            rdfs:range [ rdf:type owl:Restriction ;
+                         owl:onProperty :hasDisease ;
+                         owl:someValuesFrom :Disease
+                       ] ;
+            owl:propertyDisjointWith :hasNoDisease .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasEffect
+:hasEffect rdf:type owl:ObjectProperty ;
+           rdfs:range [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasEffect ;
+                        owl:someValuesFrom :Effect
+                      ] .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasEvidence
+:hasEvidence rdf:type owl:ObjectProperty ;
+             rdfs:range [ rdf:type owl:Restriction ;
+                          owl:onProperty :hasEvidence ;
+                          owl:someValuesFrom :Evidence
+                        ] .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasMedication
+:hasMedication rdf:type owl:ObjectProperty ;
+               rdfs:range [ rdf:type owl:Restriction ;
+                            owl:onProperty :hasMedication ;
+                            owl:someValuesFrom :Drug
+                          ] .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasNoDisease
+:hasNoDisease rdf:type owl:ObjectProperty ;
+              rdfs:subPropertyOf :hasDisease ;
+              owl:inverseOf :hasNoDisease ;
+              rdfs:domain [ rdf:type owl:Restriction ;
+                            owl:onProperty :hasDisease ;
+                            owl:someValuesFrom :Patient
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :hasDisease ;
+                            owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                            owl:onClass :Patient
+                          ] ;
+              rdfs:range [ rdf:type owl:Restriction ;
+                           owl:onProperty :hasDisease ;
+                           owl:someValuesFrom :Disease
+                         ] .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasProcessStep
+:hasProcessStep rdf:type owl:ObjectProperty ;
+                rdfs:range [ rdf:type owl:Restriction ;
+                             owl:onProperty :hasProcessStep ;
+                             owl:someValuesFrom :ProcessStep
+                           ] .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasRisk
+:hasRisk rdf:type owl:ObjectProperty ;
+         rdfs:range [ rdf:type owl:Restriction ;
+                      owl:onProperty :hasRisk ;
+                      owl:someValuesFrom :Risk
+                    ] .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#requiresExamination
+:requiresExamination rdf:type owl:ObjectProperty ;
+                     rdfs:domain [ rdf:type owl:Restriction ;
+                                   owl:onProperty :requiresExamination ;
+                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                   owl:onClass :Patient
+                                 ] ;
+                     rdfs:range [ rdf:type owl:Restriction ;
+                                  owl:onProperty :requiresExamination ;
+                                  owl:someValuesFrom :Examination
+                                ] .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#requiresMedicalManagement
+:requiresMedicalManagement rdf:type owl:ObjectProperty ;
+                           rdfs:range [ rdf:type owl:Restriction ;
+                                        owl:onProperty :retest ;
+                                        owl:someValuesFrom :MedicalManagement
+                                      ] .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#retest
+:retest rdf:type owl:ObjectProperty ;
+        rdfs:range [ rdf:type owl:Restriction ;
+                     owl:onProperty :retest ;
+                     owl:someValuesFrom :Examination
+                   ] .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasAbnormalResult
+:hasAbnormalResult rdf:type owl:DatatypeProperty ;
+                   rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasAge
+:hasAge rdf:type owl:DatatypeProperty ;
+        rdfs:domain :Patient ;
+        rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasBirthdate
+:hasBirthdate rdf:type owl:DatatypeProperty ;
+              rdfs:domain :Patient ;
+              rdfs:range xsd:dateTime .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasBodyMassIndex
+:hasBodyMassIndex rdf:type owl:DatatypeProperty ;
+                  rdfs:domain :Patient ;
+                  rdfs:range xsd:float .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasCKDInFamilyHistory
+:hasCKDInFamilyHistory rdf:type owl:DatatypeProperty ;
+                       rdfs:domain :Patient ;
+                       rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasCKDRisk
+:hasCKDRisk rdf:type owl:DatatypeProperty ;
+            rdfs:domain :Patient ;
+            rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasContraIndication
+:hasContraIndication rdf:type owl:DatatypeProperty ;
+                     rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasDescription
+:hasDescription rdf:type owl:DatatypeProperty ;
+                rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasDosage
+:hasDosage rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasDuration
+:hasDuration rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasExaminationFrequency
+:hasExaminationFrequency rdf:type owl:DatatypeProperty ;
+                         rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasGender
+:hasGender rdf:type owl:DatatypeProperty ;
+           rdfs:domain :Patient ;
+           rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasLabel
+:hasLabel rdf:type owl:DatatypeProperty ;
+          rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasLastDiagnosisTimeSpan
+:hasLastDiagnosisTimeSpan rdf:type owl:DatatypeProperty ,
+                                   owl:FunctionalProperty ;
+                          rdfs:range xsd:float .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasNormalResult
+:hasNormalResult rdf:type owl:DatatypeProperty ;
+                 rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasOptimalValue
+:hasOptimalValue rdf:type owl:DatatypeProperty ;
+                 rdfs:range xsd:double .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasProcessState
+:hasProcessState rdf:type owl:DatatypeProperty ,
+                          owl:FunctionalProperty .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasRangeEnd
+:hasRangeEnd rdf:type owl:DatatypeProperty ;
+             rdfs:range xsd:double .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasRangeStart
+:hasRangeStart rdf:type owl:DatatypeProperty ;
+               rdfs:range xsd:double .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasRule
+:hasRule rdf:type owl:DatatypeProperty ;
+         rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasStage
+:hasStage rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasTarget
+:hasTarget rdf:type owl:DatatypeProperty ,
+                    owl:FunctionalProperty ;
+           rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasTargetValue
+:hasTargetValue rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasType
+:hasType rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasUnit
+:hasUnit rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#hasValue
+:hasValue rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:range xsd:double .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#isNewFinding
+:isNewFinding rdf:type owl:DatatypeProperty ;
+              rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#isOptimal
+:isOptimal rdf:type owl:DatatypeProperty ;
+           rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#isPregnant
+:isPregnant rdf:type owl:DatatypeProperty ;
+            rdfs:domain :Patient ;
+            rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#isPreviousFinding
+:isPreviousFinding rdf:type owl:DatatypeProperty ;
+                   rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#isSmoker
+:isSmoker rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :Patient ;
+          rdfs:range xsd:boolean .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#A1C
+:A1C rdf:type owl:Class ;
+     rdfs:subClassOf :Evidence .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#ACEi
+:ACEi rdf:type owl:Class ;
+      rdfs:subClassOf :Drug .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#ACEiIntake
+:ACEiIntake rdf:type owl:Class ;
+            rdfs:subClassOf :Activity .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#ARB
+:ARB rdf:type owl:Class ;
+     rdfs:subClassOf :Drug .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#ARBIntake
+:ARBIntake rdf:type owl:Class ;
+           rdfs:subClassOf :Activity .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Activity
+:Activity rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#AdverseEffect
+:AdverseEffect rdf:type owl:Class ;
+               rdfs:subClassOf :Effect .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Antiplatelet
+:Antiplatelet rdf:type owl:Class ;
+              rdfs:subClassOf :Drug .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#AntiplateletIntake
+:AntiplateletIntake rdf:type owl:Class ;
+                    rdfs:subClassOf :Activity .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#BMIControl
+:BMIControl rdf:type owl:Class ;
+            rdfs:subClassOf :Activity .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#BloodPressure
+:BloodPressure rdf:type owl:Class ;
+               rdfs:subClassOf :Evidence .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#BodyMassIndex
+:BodyMassIndex rdf:type owl:Class ;
+               rdfs:subClassOf :Evidence .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#CardioVascularDiseaseRisk
+:CardioVascularDiseaseRisk rdf:type owl:Class ;
+                           rdfs:subClassOf :Risk .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Cardiologist
+:Cardiologist rdf:type owl:Class ;
+              rdfs:subClassOf :Physician .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#ClinicalPathway
+:ClinicalPathway rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Contraindication
+:Contraindication rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#CoronaryDisease
+:CoronaryDisease rdf:type owl:Class ;
+                 rdfs:subClassOf :Disease .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#CoronaryRisk
+:CoronaryRisk rdf:type owl:Class ;
+              rdfs:subClassOf :CardioVascularDiseaseRisk ,
+                              :Risk .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#DiabetesMellitusPatient
+:DiabetesMellitusPatient rdf:type owl:Class ;
+                         rdfs:subClassOf :Patient .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Diagnose
+:Diagnose rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Diet
+:Diet rdf:type owl:Class ;
+      rdfs:subClassOf :Activity .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Disease
+:Disease rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Drug
+:Drug rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#DrugTherapy
+:DrugTherapy rdf:type owl:Class ;
+             rdfs:subClassOf :MedicalManagement .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Effect
+:Effect rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#EmergentReferral
+:EmergentReferral rdf:type owl:Class ;
+                  rdfs:subClassOf :Referral .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Evidence
+:Evidence rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Examination
+:Examination rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Exercise
+:Exercise rdf:type owl:Class ;
+          rdfs:subClassOf :Activity .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#FluidIntake
+:FluidIntake rdf:type owl:Class ;
+             rdfs:subClassOf :Activity .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Hematuria
+:Hematuria rdf:type owl:Class ;
+           rdfs:subClassOf :Evidence .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#KidneyDiseaseRisk
+:KidneyDiseaseRisk rdf:type owl:Class ;
+                   rdfs:subClassOf :Risk .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#LifestyleManagement
+:LifestyleManagement rdf:type owl:Class ;
+                     rdfs:subClassOf :MedicalManagement .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#MedicalGame
+:MedicalGame rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#MedicalManagement
+:MedicalManagement rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#MultisystemDisease
+:MultisystemDisease rdf:type owl:Class ;
+                    rdfs:subClassOf :Disease .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#MultisystemDiseasePatient
+:MultisystemDiseasePatient rdf:type owl:Class ;
+                           rdfs:subClassOf :Patient .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Nephrologist
+:Nephrologist rdf:type owl:Class ;
+              rdfs:subClassOf :Physician .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Patient
+:Patient rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Physician
+:Physician rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#ProcessStep
+:ProcessStep rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Referral
+:Referral rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Risk
+:Risk rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#RoutineReferral
+:RoutineReferral rdf:type owl:Class ;
+                 rdfs:subClassOf :Referral .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#SmokingCessation
+:SmokingCessation rdf:type owl:Class ;
+                  rdfs:subClassOf :Activity .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#StatinIntake
+:StatinIntake rdf:type owl:Class ;
+              rdfs:subClassOf :Activity .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Statins
+:Statins rdf:type owl:Class ;
+         rdfs:subClassOf :Drug .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Target
+:Target rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#UrgentReferral
+:UrgentReferral rdf:type owl:Class ;
+                rdfs:subClassOf :Referral .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#VascularDisease
+:VascularDisease rdf:type owl:Class ;
+                 rdfs:subClassOf :Disease .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#VascularDiseasePatient
+:VascularDiseasePatient rdf:type owl:Class ;
+                        rdfs:subClassOf :Patient .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#A1C
+:A1C rdf:type owl:NamedIndividual ,
+              :A1C ,
+              :Evidence .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#A1CTarget
+:A1CTarget rdf:type owl:NamedIndividual ,
+                    :Target .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#ACEi
+:ACEi rdf:type owl:NamedIndividual ;
+      owl:sameAs :ARB .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#ACEiIntake
+:ACEiIntake rdf:type owl:NamedIndividual ,
+                     :MedicalManagement .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#ACR
+:ACR rdf:type owl:NamedIndividual ,
+              :Examination ,
+              [ rdf:type owl:Restriction ;
+                owl:onProperty :requiresExamination ;
+                owl:someValuesFrom :Examination
+              ] .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#ARB
+:ARB rdf:type owl:NamedIndividual .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#ARBIntake
+:ARBIntake rdf:type owl:NamedIndividual ,
+                    :MedicalManagement .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#ActiveLiverDisease
+:ActiveLiverDisease rdf:type owl:NamedIndividual ,
+                             :Contraindication .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Aerobic
+:Aerobic rdf:type owl:NamedIndividual ,
+                  :Activity ,
+                  :Exercise .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Antiplatelet
+:Antiplatelet rdf:type owl:NamedIndividual .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#AntiplateletIntake
+:AntiplateletIntake rdf:type owl:NamedIndividual ,
+                             :MedicalManagement .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Atorvastatin
+:Atorvastatin rdf:type owl:NamedIndividual ,
+                       :Drug ,
+                       :Statins .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#BMI
+:BMI rdf:type owl:NamedIndividual ,
+              :BodyMassIndex ,
+              :Evidence ;
+     :hasRangeEnd "25.0"^^xsd:double ;
+     :hasRangeStart "18.5"^^xsd:double .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#BMIControl
+:BMIControl rdf:type owl:NamedIndividual ,
+                     :Activity ,
+                     :BMIControl .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#BMITarget
+:BMITarget rdf:type owl:NamedIndividual ,
+                    :Target .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Biking
+:Biking rdf:type owl:NamedIndividual ,
+                 :Activity ,
+                 :Exercise .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#BloodPressure
+:BloodPressure rdf:type owl:NamedIndividual .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#BloodPressureTarget
+:BloodPressureTarget rdf:type owl:NamedIndividual ,
+                              :Target .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#CKDClinicalPathway
+:CKDClinicalPathway rdf:type owl:NamedIndividual ,
+                             :ClinicalPathway .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#CKDDiagnose
+:CKDDiagnose rdf:type owl:NamedIndividual ,
+                      :Diagnose .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#CKDDrugTherapy
+:CKDDrugTherapy rdf:type owl:NamedIndividual ,
+                         :DrugTherapy ,
+                         :MedicalManagement .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#CKDFluidIntake
+:CKDFluidIntake rdf:type owl:NamedIndividual ,
+                         :Activity ,
+                         :FluidIntake .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#CKDLifestyleManagement
+:CKDLifestyleManagement rdf:type owl:NamedIndividual ,
+                                 :LifestyleManagement ,
+                                 :MedicalManagement ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty :hasActivity ;
+                                   owl:someValuesFrom :Activity
+                                 ] ;
+                        :hasActivity :LowSodiumDiet .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#CardioVascularDisease
+:CardioVascularDisease rdf:type owl:NamedIndividual ,
+                                :Disease ,
+                                :VascularDisease .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#ChronicalKidneyDisease
+:ChronicalKidneyDisease rdf:type owl:NamedIndividual ,
+                                 :Disease .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#CoronaryRevascularization
+:CoronaryRevascularization rdf:type owl:NamedIndividual ,
+                                    :CardioVascularDiseaseRisk ,
+                                    :CoronaryDisease ,
+                                    :CoronaryRisk ,
+                                    :Disease ,
+                                    :Risk .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Cough
+:Cough rdf:type owl:NamedIndividual ,
+                :AdverseEffect ,
+                :Effect .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Dancing
+:Dancing rdf:type owl:NamedIndividual ,
+                  :Activity ,
+                  :Exercise .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#DiabetesMellitus
+:DiabetesMellitus rdf:type owl:NamedIndividual ,
+                           :Disease .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#DiastolicBloodPressure
+:DiastolicBloodPressure rdf:type owl:NamedIndividual ,
+                                 :BloodPressure ,
+                                 :Evidence .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Fluvastatin
+:Fluvastatin rdf:type owl:NamedIndividual ,
+                      :Drug ,
+                      :Statins .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Hematuria
+:Hematuria rdf:type owl:NamedIndividual ,
+                    :Evidence ,
+                    :Hematuria .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#HighAlcoholConsumption
+:HighAlcoholConsumption rdf:type owl:NamedIndividual ,
+                                 :Contraindication .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Hiking
+:Hiking rdf:type owl:NamedIndividual ,
+                 :Activity ,
+                 :Exercise .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Hypertension
+:Hypertension rdf:type owl:NamedIndividual ,
+                       :Disease .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Jogging
+:Jogging rdf:type owl:NamedIndividual ,
+                  :Activity ,
+                  :Exercise .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Jon_Doe
+:Jon_Doe rdf:type owl:NamedIndividual ,
+                  :Nephrologist ,
+                  :Physician .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Lovastatin
+:Lovastatin rdf:type owl:NamedIndividual ,
+                     :Drug ,
+                     :Statins .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#LowSodiumDiet
+:LowSodiumDiet rdf:type owl:NamedIndividual ,
+                        :Activity ,
+                        :Diet ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :hasActivity ;
+                          owl:someValuesFrom :Activity
+                        ] .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Max_Mustermann
+:Max_Mustermann rdf:type owl:NamedIndividual ,
+                         :DiabetesMellitusPatient ,
+                         :Patient ,
+                         :VascularDiseasePatient ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :requiresExamination ;
+                           owl:someValuesFrom :Examination
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :requiresExamination ;
+                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass :Patient
+                         ] ;
+                :requiresExamination :ACR ,
+                                     :eGFR ;
+                :hasCKDRisk "true"^^xsd:boolean ;
+                :hasGender "male"^^xsd:string ;
+                :hasStage 5 ;
+                :isSmoker "true"^^xsd:boolean .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#MyocardialInfarction
+:MyocardialInfarction rdf:type owl:NamedIndividual ,
+                               :CardioVascularDiseaseRisk ,
+                               :CoronaryDisease ,
+                               :CoronaryRisk ,
+                               :Disease ,
+                               :Risk .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#PVD
+:PVD rdf:type owl:NamedIndividual ,
+              :Disease ,
+              :VascularDisease .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Pravastatin
+:Pravastatin rdf:type owl:NamedIndividual ,
+                      :Drug ,
+                      :Statins .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Pregnancy
+:Pregnancy rdf:type owl:NamedIndividual ,
+                    :Contraindication .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Rosuvastatin
+:Rosuvastatin rdf:type owl:NamedIndividual ,
+                       :Drug ,
+                       :Statins .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#SLE
+:SLE rdf:type owl:NamedIndividual ,
+              :Disease ,
+              :MultisystemDisease .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Simvastatin
+:Simvastatin rdf:type owl:NamedIndividual ,
+                      :Drug ,
+                      :Statins .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#SmokingCessation
+:SmokingCessation rdf:type owl:NamedIndividual ,
+                           :Activity ,
+                           :SmokingCessation .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Statins
+:Statins rdf:type owl:NamedIndividual ,
+                  :Drug ,
+                  :Statins .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#StatinsIntake
+:StatinsIntake rdf:type owl:NamedIndividual ,
+                        :MedicalManagement .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Stroke
+:Stroke rdf:type owl:NamedIndividual ,
+                 :Disease ,
+                 :VascularDisease .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#SystolicBloodPressure
+:SystolicBloodPressure rdf:type owl:NamedIndividual ,
+                                :BloodPressure ,
+                                :Evidence .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#TIA
+:TIA rdf:type owl:NamedIndividual ,
+              :Disease ,
+              :VascularDisease .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#UrinAnalysis
+:UrinAnalysis rdf:type owl:NamedIndividual ,
+                       :Examination .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#Walking
+:Walking rdf:type owl:NamedIndividual ,
+                  :Activity ,
+                  :Exercise .
+
+
+###  http://www.semanticweb.org/merkle/ontologies/2017/11/vCare#eGFR
+:eGFR rdf:type owl:NamedIndividual ,
+               :Examination ,
+               [ rdf:type owl:Restriction ;
+                 owl:onProperty :requiresExamination ;
+                 owl:someValuesFrom :Examination
+               ] .
+
+
+#################################################################
+#    Rules
+#################################################################
+
+:p rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
+
+:val2 rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
+
+:val1 rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
+
+:val rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
+
+:d rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
+
+:ph rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "CKD_Abnormal_Result"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> :Patient ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasAbnormalResult ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :ACR ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :isNewFinding ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :d ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                                           ] ;
+                                                                 rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                                                        <http://www.w3.org/2003/11/swrl#classPredicate> :Nephrologist ;
+                                                                                        <http://www.w3.org/2003/11/swrl#argument1> :ph
+                                                                                      ] ;
+                                                                            rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                                       rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                                                                   <http://www.w3.org/2003/11/swrl#classPredicate> :Examination ;
+                                                                                                   <http://www.w3.org/2003/11/swrl#argument1> :d
+                                                                                                 ] ;
+                                                                                       rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                                                  rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                                                              <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasAbnormalResult ;
+                                                                                                              <http://www.w3.org/2003/11/swrl#argument1> :eGFR ;
+                                                                                                              <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                                                                            ] ;
+                                                                                                  rdf:rest rdf:nil
+                                                                                                ]
+                                                                                     ]
+                                                                          ]
+                                                               ]
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :retest ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> :eGFR
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :retest ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> :ACR
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasAbnormalResult ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                                           ] ;
+                                                                 rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                                        <http://www.w3.org/2003/11/swrl#propertyPredicate> :consult ;
+                                                                                        <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                                        <http://www.w3.org/2003/11/swrl#argument2> :ph
+                                                                                      ] ;
+                                                                            rdf:rest rdf:nil
+                                                                          ]
+                                                               ]
+                                                    ]
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "Patient_has_CKD"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> :Patient ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasAbnormalResult ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :ACR ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :isPreviousFinding ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :d ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                                           ] ;
+                                                                 rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                                                        <http://www.w3.org/2003/11/swrl#classPredicate> :Examination ;
+                                                                                        <http://www.w3.org/2003/11/swrl#argument1> :d
+                                                                                      ] ;
+                                                                            rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                                       rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                                                   <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasAbnormalResult ;
+                                                                                                   <http://www.w3.org/2003/11/swrl#argument1> :eGFR ;
+                                                                                                   <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                                                                 ] ;
+                                                                                       rdf:rest rdf:nil
+                                                                                     ]
+                                                                          ]
+                                                               ]
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasDisease ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> :ChronicalKidneyDisease
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "CKD_Risk_MultisystemDisease"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> :MultisystemDiseasePatient ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasCKDRisk ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :requiresExamination ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> :eGFR
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :requiresExamination ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument2> :ACR
+                                                                           ] ;
+                                                                 rdf:rest rdf:nil
+                                                               ]
+                                                    ]
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment "Evaluates if the patient is at risk for CKD"^^xsd:string ;
+   rdfs:label "CKD_Risk_Hypertension"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> :Patient ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasDisease ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> :Hypertension
+                                                                ] ;
+                                                      rdf:rest rdf:nil
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasCKDRisk ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :requiresExamination ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> :eGFR
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :requiresExamination ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument2> :ACR
+                                                                           ] ;
+                                                                 rdf:rest rdf:nil
+                                                               ]
+                                                    ]
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "Retest_Otherwise"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> :Patient ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasNoDisease ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> :DiabetesMellitus
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasNormalResult ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                                           ] ;
+                                                                 rdf:rest rdf:nil
+                                                               ]
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasExaminationFrequency ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> "1-2 years"^^xsd:string
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "CKD_Risk_Family_History"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> :Patient ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#greaterThanOrEqual> ;
+                                                                  <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                               rdf:first :val ;
+                                                                                                               rdf:rest [ rdf:type rdf:List ;
+                                                                                                                          rdf:first 5 ;
+                                                                                                                          rdf:rest rdf:nil
+                                                                                                                        ]
+                                                                                                             ]
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasCKDInFamilyHistory ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                                           ] ;
+                                                                 rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                                        <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasStage ;
+                                                                                        <http://www.w3.org/2003/11/swrl#argument1> :ChronicalKidneyDisease ;
+                                                                                        <http://www.w3.org/2003/11/swrl#argument2> :val
+                                                                                      ] ;
+                                                                            rdf:rest rdf:nil
+                                                                          ]
+                                                               ]
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :requiresExamination ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> :eGFR
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :requiresExamination ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> :ACR
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasCKDRisk ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                                           ] ;
+                                                                 rdf:rest rdf:nil
+                                                               ]
+                                                    ]
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "CKD_Normal_Result"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> :Patient ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasNormalResult ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :ACR ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasNormalResult ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :eGFR ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                                           ] ;
+                                                                 rdf:rest rdf:nil
+                                                               ]
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasNormalResult ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "CKD_Diagnose_ACR_High"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> :Patient ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasValue ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :ACR ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> :val
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#greaterThan> ;
+                                                                             <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                                          rdf:first :val ;
+                                                                                                                          rdf:rest [ rdf:type rdf:List ;
+                                                                                                                                     rdf:first 60 ;
+                                                                                                                                     rdf:rest rdf:nil
+                                                                                                                                   ]
+                                                                                                                        ]
+                                                                           ] ;
+                                                                 rdf:rest rdf:nil
+                                                               ]
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasDisease ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> :ChronicalKidneyDisease
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "CKD_Diagnose_eGFR_Low"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> :Patient ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasValue ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :eGFR ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> :val
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#lessThan> ;
+                                                                             <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                                          rdf:first :val ;
+                                                                                                                          rdf:rest [ rdf:type rdf:List ;
+                                                                                                                                     rdf:first 30 ;
+                                                                                                                                     rdf:rest rdf:nil
+                                                                                                                                   ]
+                                                                                                                        ]
+                                                                           ] ;
+                                                                 rdf:rest rdf:nil
+                                                               ]
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasDisease ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> :ChronicalKidneyDisease
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "CKD_Risk_VascularDisease"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> :VascularDiseasePatient ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasCKDRisk ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :requiresExamination ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> :eGFR
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :requiresExamination ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument2> :ACR
+                                                                           ] ;
+                                                                 rdf:rest rdf:nil
+                                                               ]
+                                                    ]
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "ACR_Result_Abnormal"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasValue ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :ACR ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> :val
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#greaterThanOrEqual> ;
+                                                                  <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                               rdf:first :val ;
+                                                                                                               rdf:rest [ rdf:type rdf:List ;
+                                                                                                                          rdf:first 3 ;
+                                                                                                                          rdf:rest rdf:nil
+                                                                                                                        ]
+                                                                                                             ]
+                                                                ] ;
+                                                      rdf:rest rdf:nil
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasAbnormalResult ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :ACR ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "ACR_Result_Normal"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasValue ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :ACR ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> :val
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#lessThan> ;
+                                                                  <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                               rdf:first :val ;
+                                                                                                               rdf:rest [ rdf:type rdf:List ;
+                                                                                                                          rdf:first 3 ;
+                                                                                                                          rdf:rest rdf:nil
+                                                                                                                        ]
+                                                                                                             ]
+                                                                ] ;
+                                                      rdf:rest rdf:nil
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasNormalResult ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :ACR ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "eGFR_Result_Normal"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasValue ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :eGFR ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> :val
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#greaterThanOrEqual> ;
+                                                                  <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                               rdf:first :val ;
+                                                                                                               rdf:rest [ rdf:type rdf:List ;
+                                                                                                                          rdf:first 60 ;
+                                                                                                                          rdf:rest rdf:nil
+                                                                                                                        ]
+                                                                                                             ]
+                                                                ] ;
+                                                      rdf:rest rdf:nil
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasNormalResult ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :eGFR ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "eGFR_Result_Abnormal"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasValue ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :eGFR ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> :val
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#lessThan> ;
+                                                                  <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                               rdf:first :val ;
+                                                                                                               rdf:rest [ rdf:type rdf:List ;
+                                                                                                                          rdf:first 60 ;
+                                                                                                                          rdf:rest rdf:nil
+                                                                                                                        ]
+                                                                                                             ]
+                                                                ] ;
+                                                      rdf:rest rdf:nil
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasAbnormalResult ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :eGFR ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "CKD_Risk_DiabetesMellitus"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> :DiabetesMellitusPatient ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasCKDRisk ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :requiresExamination ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> :eGFR
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :requiresExamination ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument2> :ACR
+                                                                           ] ;
+                                                                 rdf:rest rdf:nil
+                                                               ]
+                                                    ]
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "Diabetic_Bloodpressure_Target"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasValue ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :DiastolicBloodPressure ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> :val2
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#greaterThanOrEqual> ;
+                                                                  <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                               rdf:first :val2 ;
+                                                                                                               rdf:rest [ rdf:type rdf:List ;
+                                                                                                                          rdf:first 80 ;
+                                                                                                                          rdf:rest rdf:nil
+                                                                                                                        ]
+                                                                                                             ]
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#classPredicate> :DiabetesMellitusPatient ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                                           ] ;
+                                                                 rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                                        <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#greaterThanOrEqual> ;
+                                                                                        <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                                                     rdf:first :val1 ;
+                                                                                                                                     rdf:rest [ rdf:type rdf:List ;
+                                                                                                                                                rdf:first 130 ;
+                                                                                                                                                rdf:rest rdf:nil
+                                                                                                                                              ]
+                                                                                                                                   ]
+                                                                                      ] ;
+                                                                            rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                                       rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                                                   <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasValue ;
+                                                                                                   <http://www.w3.org/2003/11/swrl#argument1> :SystolicBloodPressure ;
+                                                                                                   <http://www.w3.org/2003/11/swrl#argument2> :val1
+                                                                                                 ] ;
+                                                                                       rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                                                  rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                                                              <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasDisease ;
+                                                                                                              <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                                                              <http://www.w3.org/2003/11/swrl#argument2> :ChronicalKidneyDisease
+                                                                                                            ] ;
+                                                                                                  rdf:rest rdf:nil
+                                                                                                ]
+                                                                                     ]
+                                                                          ]
+                                                               ]
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasTargetValue ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :SystolicBloodPressure ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> :val1
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasTargetValue ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :DiastolicBloodPressure ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> :val2
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#lessThan> ;
+                                                                             <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                                          rdf:first :val2 ;
+                                                                                                                          rdf:rest [ rdf:type rdf:List ;
+                                                                                                                                     rdf:first 80 ;
+                                                                                                                                     rdf:rest rdf:nil
+                                                                                                                                   ]
+                                                                                                                        ]
+                                                                           ] ;
+                                                                 rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                                        <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#lessThan> ;
+                                                                                        <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                                                     rdf:first :val1 ;
+                                                                                                                                     rdf:rest [ rdf:type rdf:List ;
+                                                                                                                                                rdf:first 130 ;
+                                                                                                                                                rdf:rest rdf:nil
+                                                                                                                                              ]
+                                                                                                                                   ]
+                                                                                      ] ;
+                                                                            rdf:rest rdf:nil
+                                                                          ]
+                                                               ]
+                                                    ]
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "A1C_Target"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasEvidence ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :A1C ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> :val
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#greaterThanOrEqual> ;
+                                                                  <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                               rdf:first :val ;
+                                                                                                               rdf:rest [ rdf:type rdf:List ;
+                                                                                                                          rdf:first 7 ;
+                                                                                                                          rdf:rest rdf:nil
+                                                                                                                        ]
+                                                                                                             ]
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#classPredicate> :DiabetesMellitusPatient ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                                           ] ;
+                                                                 rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                                        <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasDisease ;
+                                                                                        <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                                        <http://www.w3.org/2003/11/swrl#argument2> :DiabetesMellitus
+                                                                                      ] ;
+                                                                            rdf:rest rdf:nil
+                                                                          ]
+                                                               ]
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasEvidence ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :A1C ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> :val
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#lessThan> ;
+                                                                  <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                               rdf:first :val ;
+                                                                                                               rdf:rest [ rdf:type rdf:List ;
+                                                                                                                          rdf:first 7 ;
+                                                                                                                          rdf:rest rdf:nil
+                                                                                                                        ]
+                                                                                                             ]
+                                                                ] ;
+                                                      rdf:rest rdf:nil
+                                                    ]
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "Retest_Annually"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> :DiabetesMellitusPatient ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasNormalResult ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                                ] ;
+                                                      rdf:rest rdf:nil
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasExaminationFrequency ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :p ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> "annually"^^xsd:string
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "BMI_Target"^^xsd:string ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> :Evidence ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :BMI
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasValue ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :BMI ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> :val
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#greaterThanOrEqual> ;
+                                                                             <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                                          rdf:first :val ;
+                                                                                                                          rdf:rest [ rdf:type rdf:List ;
+                                                                                                                                     rdf:first 18.5 ;
+                                                                                                                                     rdf:rest rdf:nil
+                                                                                                                                   ]
+                                                                                                                        ]
+                                                                           ] ;
+                                                                 rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#BuiltinAtom> ;
+                                                                                        <http://www.w3.org/2003/11/swrl#builtin> <http://www.w3.org/2003/11/swrlb#lessThanOrEqual> ;
+                                                                                        <http://www.w3.org/2003/11/swrl#arguments> [ rdf:type rdf:List ;
+                                                                                                                                     rdf:first :val ;
+                                                                                                                                     rdf:rest [ rdf:type rdf:List ;
+                                                                                                                                                rdf:first 25 ;
+                                                                                                                                                rdf:rest rdf:nil
+                                                                                                                                              ]
+                                                                                                                                   ]
+                                                                                      ] ;
+                                                                            rdf:rest rdf:nil
+                                                                          ]
+                                                               ]
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :isOptimal ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :BMI ;
+                                                       <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
+
+###  Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi
