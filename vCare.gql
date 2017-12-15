@@ -1,0 +1,241 @@
+define
+
+######################################
+# Entities                           #
+######################################
+
+Patient is-abstract sub entity
+    plays patient
+    has name
+    has firstname
+    has surname
+    has gender
+    has age
+    has birthdate
+    has identifier
+    has smoker
+    has stage
+    has pregnant;
+
+DiabetesMellitusPatient sub Patient;
+VascularDiseasePatient sub Patient;
+MultisystemDiseasePatient sub Patient;
+
+
+Disease is-abstract sub entity
+    plays disease
+    has name
+    has description;
+
+CoronaryDisease sub Disease;
+MultisystemDisease sub Disease;
+VascularDisease sub Disease;
+
+Activity is-abstract sub entity
+    plays activity
+    has name;
+
+ACEiIntake sub Activity;
+AntiplateletIntake sub Activity;
+ARBIntake sub Activity;
+BMIControl sub Activity;
+Diet sub Activity;
+Exercise sub Activity;
+FluidIntake sub Activity;
+SmokingCessation sub Activity;
+StatinIntake sub Activity;
+
+ClinicalPathway sub entity
+    has name
+    has duration
+    plays clinicalPathway;
+
+ContraIndication is-abstract sub entity;
+
+Diagnose is-abstract sub entity;
+
+Drug is-abstract sub entity
+    plays drug;
+
+ACEi sub Drug;
+Antiplatelet sub Drug;
+ARB sub Drug;
+Statins sub Drug;
+
+Effect is-abstract sub entity
+	plays effect;
+
+AdverseEffect sub Effect;
+
+Evidence is-abstract sub entity
+    plays evidence;
+
+A1C sub Evidence;
+BloodPressure sub Evidence;
+BodyMassIndex sub Evidence;
+Hematuria sub Evidence;
+
+Examination is-abstract sub entity
+    plays examination;
+
+MedicalGame sub entity
+    plays game
+    has name
+    has description;
+
+MedicalManagement is-abstract sub entity
+    plays medicalManagement;
+
+DrugTherapy sub MedicalManagement;
+LifestyleManagement sub MedicalManagement;
+
+Physician sub entity
+    plays physician
+    has name
+    has competency;
+
+Cardiologist sub Physician;
+Nephrologist sub Physician;
+
+Referral is-abstract sub entity;
+
+EmergentReferral sub Referral;
+RoutineReferral sub Referral;
+UrgentReferral sub Referral;
+
+Risk is-abstract sub entity
+    has description
+    plays risk;
+
+CardioVascularDiseaseRisk sub Risk;
+CoronaryRisk sub Risk;
+KidneyDiseaseRisk sub Risk;
+
+Target is-abstract sub entity;
+
+BodyConstitution is-abstract sub entity
+    plays bodyconstitution;
+
+
+#######################################
+# Attributes                          #
+#######################################
+
+name sub attribute, datatype string;
+firstname sub name, datatype string;
+surname sub name, datatype string;
+gender sub attribute, datatype string;
+age sub attribute, datatype long;
+birthdate sub attribute, datatype string;
+identifier sub attribute, datatype string;
+description sub attribute, datatype string;
+smoker sub attribute, datatype boolean;
+pregnant sub attribute, datatype boolean;
+stage sub attribute, datatype long;
+abnormalResult sub attribute, datatype boolean;
+duration sub attribute, datatype double;
+bodymassindex sub attribute, datatype double;
+hasCKDInFamilyHistory sub attribute, datatype boolean;
+hasCKDRisk sub attribute, datatype boolean;
+contraIndication sub attribute, datatype boolean;
+dosage sub attribute, datatype double;
+examinationFrequency sub attribute, datatype long;
+lastDiagnosisTimespan sub attribute, datatype double;
+hasNormalResult sub attribute, datatype boolean;
+optimalValue sub attribute, datatype double;
+rangeEnd sub attribute, datatype double;
+rangeStart sub attribute, datatype double;
+hasRule sub attribute, datatype string;
+target sub attribute, datatype string;
+targetValue sub attribute, datatype double;
+type sub attribute, datatype string;
+unit sub attribute, datatype string;
+value sub attribute, datatype double;
+isNewFinding sub attribute, datatype boolean;
+isOptimal sub attribute, datatype boolean;
+pregnant sub attribute, datatype boolean;
+isPreviousFinding sub attribute, datatype boolean;
+competency sub attribute, datatype string;
+
+#######################################
+# Relations and Roles                 #
+#######################################
+hasDisease sub relationship
+    relates patient
+    relates disease;
+
+consult sub relationship
+    relates patient
+    relates physician;
+
+hasActivity sub relationship
+    relates clinicalPathway
+    relates activity;
+
+performsActivity sub relationship
+    relates patient
+    relates activity;
+
+hasBodyConstitution sub relationship
+    relates patient
+    relates bodyconstitution;
+
+hasNoDisease sub relationship
+    relates patient
+    relates disease;
+
+hasEffect sub relationship
+    relates effect
+    relates activity;
+	
+hasEffect sub relationship
+	relates game
+	relates effect;
+
+hasEvidence sub relationship
+    relates evidence
+    relates examination;
+
+hasMedication sub relationship
+    relates drug
+    relates patient;
+
+hasRisk sub relationship
+    relates risk
+    relates evidence;
+
+requiresExamination sub relationship
+    relates patient
+    relates examination;
+
+requiresMedicalManagement sub relationship
+    relates patient
+    relates medicalManagement;
+
+retest sub relationship
+    relates physician
+    relates examination;
+
+patient sub role;
+drug sub role;
+disease sub role;
+physician sub role;
+activity sub role;
+bodyconstitution sub role;
+evidence sub role;
+examination sub role;
+risk sub role;
+medicalManagement sub role;
+clinicalPathway sub role;
+game sub role;
+effect sub role;
+
+######################################
+# Rules                              #
+######################################
+
+
+
+
+
+
