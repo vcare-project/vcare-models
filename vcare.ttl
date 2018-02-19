@@ -1,0 +1,1217 @@
+# baseURI: http://vcare.eu/vcare
+# imports: http://datashapes.org/dash
+
+@prefix : <http://vcare.eu/vcare> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix spin: <http://spinrdf.org/spin#> .
+@prefix vcare: <http://vcare.eu/vcare#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://vcare.eu/vcare>
+  rdf:type owl:Ontology ;
+  spin:imports <http://topbraid.org/spin/owlrl-all> ;
+  spin:imports <http://topbraid.org/spin/rdfsplus> ;
+  spin:imports <http://topbraid.org/spin/skosspin> ;
+  spin:imports <http://topbraid.org/spin/spinowl> ;
+  owl:imports <http://datashapes.org/dash> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+vcare:ACEi
+  rdf:type rdfs:Class ;
+  rdfs:label "ACEi" ;
+  rdfs:subClassOf vcare:Drug ;
+  owl:equivalentClass vcare:ARB ;
+.
+vcare:ACEiIntake
+  rdf:type vcare:DrugIntakeActivity ;
+  rdfs:label "ACEi intake" ;
+.
+vcare:ACRTest
+  rdf:type vcare:MedicalTest ;
+  rdfs:label "ACRTest" ;
+.
+vcare:ARB
+  rdf:type rdfs:Class ;
+  rdfs:label "ARB" ;
+  rdfs:subClassOf vcare:Drug ;
+  owl:equivalentClass vcare:ACEi ;
+.
+vcare:ARBIntake
+  rdf:type vcare:DrugIntakeActivity ;
+  rdfs:label "ARBIntake" ;
+.
+vcare:Activity
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Activity" ;
+  sh:property [
+      sh:path vcare:requiresActivity ;
+      sh:class vcare:PhysicianActivity ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+.
+vcare:AgentActivity
+  rdf:type rdfs:Class ;
+  rdfs:label "Agent activity" ;
+  rdfs:subClassOf vcare:Activity ;
+.
+vcare:AlcoholCessation
+  rdf:type vcare:RegulativeActivity ;
+  rdfs:label "Alcohol cessation" ;
+.
+vcare:AnormalACR
+  rdf:type vcare:Diagnosis ;
+  vcare:hasReward -1 ;
+  vcare:hasRule """vcare:TestACR vcare:hasValue ?acr.
+FILTER(?acr > 60 ||  (?acr >= 3 && ?acr <= 60) .""" ;
+  rdfs:label "Anormal ACR" ;
+.
+vcare:AnormalEGFR
+  rdf:type vcare:Diagnosis ;
+  vcare:hasReward -1 ;
+  rdfs:label "Low EGFR" ;
+.
+vcare:Antiplatelet
+  rdf:type rdfs:Class ;
+  rdfs:label "Antiplatelet" ;
+  rdfs:subClassOf vcare:Drug ;
+.
+vcare:AntiplateletIntake
+  rdf:type vcare:DrugIntakeActivity ;
+  rdfs:label "Antiplatelet intake" ;
+.
+vcare:BMIControl
+  rdf:type vcare:RegulativeActivity ;
+  rdfs:label "BMIControl" ;
+.
+vcare:Biking
+  rdf:type vcare:PhysicalActivity ;
+  rdfs:label "Biking" ;
+.
+vcare:BladderCancer
+  rdf:type vcare:ChronicalKidneyDisease ;
+  rdfs:label "Bladder cancer" ;
+.
+vcare:CKDEmergentReferral
+  rdf:type vcare:EmergentReferral ;
+  rdfs:label "CKDEmergent referral" ;
+.
+vcare:CKDPathway
+  rdf:type vcare:ClinicalPathway ;
+  vcare:hasState vcare:TargetA1C ;
+  vcare:hasState vcare:TargetBMI ;
+  vcare:hasState vcare:TargetBloodpressure ;
+  vcare:hasState vcare:TargetFluidIntake ;
+  vcare:hasState vcare:UserHasCKD ;
+  vcare:hasState vcare:UserHasCKDRisk ;
+  vcare:hasState vcare:UserHasNoCKD ;
+  vcare:hasState vcare:UserHasNoCKDRisk ;
+  vcare:requiresActivity vcare:CheckCKDRisk ;
+  rdfs:label "CKDPathway" ;
+.
+vcare:CKDRoutineReferral
+  rdf:type vcare:RoutineReferral ;
+  rdfs:label "CKDRoutine referral" ;
+.
+vcare:CKDSimulation
+  rdf:type vcare:ClinicalPathwaySimulation ;
+  vcare:hasSPARQLQuery """PREFIX vcare: <http://vcare.eu/vcare#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?instances ?targets ?activities
+WHERE { 
+?states rdfs:subClassOf vcare:State.
+?instances rdf:type ?states.
+?cp rdf:type vcare:ClinicalPathway.
+?cp rdfs:label \"CKDPathway\".
+?cp vcare:hasState ?instances.
+?activities rdfs:subClassOf vcare:Activity.
+?activity rdf:type ?activities.
+?cp vcare:requiresActivity ?activity.
+?targets rdf:type vcare:Target.
+}""" ;
+  rdfs:label "vcare CKDSimulation" ;
+.
+vcare:CKDUrgentReferral
+  rdf:type vcare:UrgentReferral ;
+  rdfs:label "CKDUrgent referral" ;
+.
+vcare:CardioVascularDisease
+  rdf:type vcare:VascularDisease ;
+  rdfs:label "Cardio vascular disease" ;
+.
+vcare:Cardiologist
+  rdf:type rdfs:Class ;
+  rdfs:label "Cardiologist" ;
+  rdfs:subClassOf vcare:Physician ;
+.
+vcare:CheckCKDRisk
+  rdf:type vcare:PhysicianActivity ;
+  vcare:requiresActivity vcare:RetestACR ;
+  vcare:requiresActivity vcare:RetestEGFR ;
+  vcare:requiresActivity vcare:TestACR ;
+  vcare:requiresActivity vcare:TestEGFR ;
+  rdfs:label "Check CKDRisk" ;
+.
+vcare:ChronicalKidneyDisease
+  rdf:type rdfs:Class ;
+  rdfs:label "Chronical kidney disease" ;
+  rdfs:subClassOf vcare:Disease ;
+.
+vcare:ClinicalPathway
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Clinical pathway" ;
+  sh:property [
+      sh:path vcare:hasState ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path vcare:requiresActivity ;
+      sh:class vcare:PhysicianActivity ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+.
+vcare:ClinicalPathwaySimulation
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Clinical pathway simulation" ;
+  rdfs:subClassOf vcare:SimulationTask ;
+  sh:property [
+      sh:path vcare:hasSPARQLQuery ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "has SPARQLQuery" ;
+    ] ;
+.
+vcare:Competency
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Competency" ;
+.
+vcare:ContextSimulation
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Context simulation" ;
+  rdfs:subClassOf vcare:SimulationTask ;
+.
+vcare:ContextState
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Context state" ;
+  rdfs:subClassOf vcare:State ;
+.
+vcare:ControlWeight
+  rdf:type vcare:RegulativeActivity ;
+  rdfs:label "Control weight" ;
+.
+vcare:CoronaryDisease
+  rdf:type rdfs:Class ;
+  rdfs:label "Coronary disease" ;
+  rdfs:subClassOf vcare:Disease ;
+.
+vcare:CoronaryDiseasePatient
+  rdf:type rdfs:Class ;
+  rdfs:label "Coronary disease patient" ;
+  rdfs:subClassOf vcare:Patient ;
+.
+vcare:Dancing
+  rdf:type vcare:PhysicalActivity ;
+  rdfs:label "Dancing" ;
+.
+vcare:Dentist
+  rdf:type rdfs:Class ;
+  rdfs:label "Dentist" ;
+  rdfs:subClassOf vcare:Physician ;
+.
+vcare:DiabetesMellitus
+  rdf:type rdfs:Class ;
+  rdfs:label "Diabetes mellitus" ;
+  rdfs:subClassOf vcare:Disease ;
+.
+vcare:DiabetesMellitusPatient
+  rdf:type rdfs:Class ;
+  rdfs:label "Diabetes mellitus patient" ;
+  rdfs:subClassOf vcare:Patient ;
+.
+vcare:DiabetesMellitusType2
+  rdf:type vcare:DiabetesMellitus ;
+  rdfs:label "Diabetes mellitus type2" ;
+.
+vcare:Diagnosis
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Diagnosis" ;
+  rdfs:subClassOf vcare:State ;
+.
+vcare:DiagnosisSimulation
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Diagnosis simulation" ;
+  rdfs:subClassOf vcare:SimulationTask ;
+.
+vcare:Disease
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Disease" ;
+.
+vcare:Drug
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Drug" ;
+.
+vcare:DrugIntakeActivity
+  rdf:type rdfs:Class ;
+  rdfs:label "Drug intake activity" ;
+  rdfs:subClassOf vcare:RegulativeActivity ;
+.
+vcare:EGFRTest
+  rdf:type vcare:MedicalTest ;
+  rdfs:label "EGFRTest" ;
+.
+vcare:Effect
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Effect" ;
+.
+vcare:EmergentReferral
+  rdf:type rdfs:Class ;
+  rdfs:label "Emergent referral" ;
+  rdfs:subClassOf vcare:Referral ;
+.
+vcare:EqualWeight
+  rdf:type vcare:ContextState ;
+  rdfs:label "Equal weight" ;
+.
+vcare:Female
+  rdf:type vcare:Gender ;
+  vcare:hasLabel "Female" ;
+  rdfs:label "Female" ;
+.
+vcare:FluidIntake
+  rdf:type vcare:RegulativeActivity ;
+  rdfs:label "Fluid intake" ;
+.
+vcare:Game
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Game" ;
+.
+vcare:Gender
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Gender" ;
+  sh:property [
+      sh:path vcare:hasLabel ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:Literal ;
+    ] ;
+.
+vcare:GiveAccousticFeedback
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Give accoustic feedback" ;
+.
+vcare:Hematuria
+  rdf:type vcare:Diagnosis ;
+  vcare:hasReward -1 ;
+  rdfs:label "Hematuria" ;
+.
+vcare:High
+  rdf:type vcare:Priority ;
+  rdfs:label "High" ;
+.
+vcare:Hiking
+  rdf:type vcare:PhysicalActivity ;
+  rdfs:label "Hiking" ;
+.
+vcare:Hypertension
+  rdf:type vcare:Diagnosis ;
+  vcare:hasReward -1 ;
+  rdfs:label "Hypertension" ;
+.
+vcare:Hypotension
+  rdf:type vcare:Diagnosis ;
+  rdfs:label "Hypotension" ;
+.
+vcare:IncreaseFruitVegatableConsumption
+  rdf:type vcare:RegulativeActivity ;
+  rdfs:label "Increase fruit vegatable consumption" ;
+.
+vcare:IncreasingHeartrate
+  rdf:type vcare:ShorttermEffect ;
+  rdfs:label "Increasing heartrate" ;
+.
+vcare:InteractionActivity
+  rdf:type rdfs:Class ;
+  rdfs:label "Interaction activity" ;
+  rdfs:subClassOf vcare:Activity ;
+.
+vcare:KidneyStones
+  rdf:type vcare:ChronicalKidneyDisease ;
+  rdfs:label "Kidney stones" ;
+.
+vcare:LeisureActivity
+  rdf:type rdfs:Class ;
+  rdfs:label "Leisure activity" ;
+  rdfs:subClassOf vcare:Activity ;
+.
+vcare:ListenToMusic
+  rdf:type vcare:LeisureActivity ;
+  rdfs:label "Listen to music" ;
+.
+vcare:LongtermEffect
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Longterm effect" ;
+  rdfs:subClassOf vcare:Effect ;
+.
+vcare:Low
+  rdf:type vcare:Priority ;
+  rdfs:label "Low" ;
+.
+vcare:LowSodiumDiet
+  rdf:type vcare:RegulativeActivity ;
+  rdfs:label "Low sodium diet" ;
+.
+vcare:LowerBloodpressure
+  rdf:type vcare:LongtermEffect ;
+  rdfs:label "Lower bloodpressure" ;
+.
+vcare:LowerWeight
+  rdf:type vcare:LongtermEffect ;
+  rdfs:label "Lower weight" ;
+.
+vcare:Male
+  rdf:type vcare:Gender ;
+  vcare:hasLabel "Male" ;
+  rdfs:label "Male" ;
+.
+vcare:MarkAnxiety_TranquillityLevel
+  rdf:type vcare:InteractionActivity ;
+  rdfs:label "Mark anxiety Tranquillity level" ;
+.
+vcare:MedicalGame
+  rdf:type rdfs:Class ;
+  rdfs:label "Medical game" ;
+  rdfs:subClassOf vcare:Game ;
+.
+vcare:MedicalPerson
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Medical person" ;
+.
+vcare:MedicalTest
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Campaign" ;
+.
+vcare:Middle
+  rdf:type vcare:Priority ;
+  rdfs:label "Middle" ;
+.
+vcare:MultisystemDisease
+  rdf:type rdfs:Class ;
+  rdfs:label "Multisystem disease" ;
+  rdfs:subClassOf vcare:Disease ;
+.
+vcare:MultisystemDiseasePatient
+  rdf:type rdfs:Class ;
+  rdfs:label "Multisystem disease patient" ;
+  rdfs:subClassOf vcare:Patient ;
+.
+vcare:Nephrologist
+  rdf:type rdfs:Class ;
+  rdfs:label "Nephrologist" ;
+  rdfs:subClassOf vcare:Physician ;
+.
+vcare:Neuroligist
+  rdf:type rdfs:Class ;
+  rdfs:label "Neuroligist" ;
+  rdfs:subClassOf vcare:Physician ;
+.
+vcare:NormalACR
+  rdf:type vcare:Diagnosis ;
+  vcare:hasRule "?value < 3" ;
+  rdfs:label "Normal ACR" ;
+.
+vcare:NormalEGFR
+  rdf:type vcare:Diagnosis ;
+  vcare:hasRule "?value >= 60" ;
+  rdfs:label "Normal EGFR" ;
+.
+vcare:PVD
+  rdf:type vcare:VascularDisease ;
+  rdfs:label "PVD" ;
+.
+vcare:Patient
+  rdf:type rdfs:Class ;
+  rdfs:label "Patient" ;
+.
+vcare:PhysicalActivity
+  rdf:type rdfs:Class ;
+  rdfs:label "Physical activity" ;
+  rdfs:subClassOf vcare:Activity ;
+.
+vcare:Physichiatrist
+  rdf:type rdfs:Class ;
+  rdfs:label "Physichiatrist" ;
+  rdfs:subClassOf vcare:Physician ;
+.
+vcare:Physician
+  rdf:type rdfs:Class ;
+  rdfs:label "Physician" ;
+  rdfs:subClassOf vcare:MedicalPerson ;
+.
+vcare:PhysicianActivity
+  rdf:type rdfs:Class ;
+  rdfs:label "Physician activity" ;
+  rdfs:subClassOf vcare:Activity ;
+.
+vcare:PlayPuzzle
+  rdf:type vcare:LeisureActivity ;
+  rdfs:label "Play puzzle" ;
+.
+vcare:PlaySudoku
+  rdf:type vcare:LeisureActivity ;
+  rdfs:label "Play sudoku" ;
+.
+vcare:Priority
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Priority" ;
+.
+vcare:ProposeDinnerPreparation
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Propose dinner preparation" ;
+.
+vcare:ProposeWalking
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Propose walking" ;
+.
+vcare:RecommendCognitiveExercises
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Recommend cognitive exercises" ;
+.
+vcare:ReduceSaltConsumption
+  rdf:type vcare:RegulativeActivity ;
+  rdfs:label "Reduce salt consumption" ;
+.
+vcare:Referral
+  rdf:type rdfs:Class ;
+  rdfs:label "Referral" ;
+  rdfs:subClassOf vcare:Activity ;
+.
+vcare:RegulativeActivity
+  rdf:type rdfs:Class ;
+  rdfs:label "Regulative activity" ;
+  rdfs:subClassOf vcare:Activity ;
+.
+vcare:RemindKey
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Remind key" ;
+.
+vcare:RemindMedication
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Remind medication" ;
+.
+vcare:RemindMobilePhone
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Remind mobile phone" ;
+.
+vcare:RemindRehabilitationSession
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Remind rehabilitation session" ;
+.
+vcare:RemindStairs
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Remind stairs" ;
+.
+vcare:RemindWetSurface
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Remind wet surface" ;
+.
+vcare:RetestACR
+  rdf:type vcare:PhysicianActivity ;
+  rdfs:label "Retest ACR" ;
+.
+vcare:RetestEGFR
+  rdf:type vcare:PhysicianActivity ;
+  rdfs:label "Retest EGFR" ;
+.
+vcare:RetestedACR
+  rdf:type vcare:ContextState ;
+  rdfs:label "Physician retested ACR" ;
+.
+vcare:RetestedEGFR
+  rdf:type vcare:ContextState ;
+  rdfs:label "Physician retested EGFR" ;
+.
+vcare:Risk
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Risk" ;
+  rdfs:subClassOf vcare:State ;
+.
+vcare:RiskSimulation
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Risk simulation" ;
+  rdfs:subClassOf vcare:SimulationTask ;
+.
+vcare:RoutineReferral
+  rdf:type rdfs:Class ;
+  rdfs:label "Routine referral" ;
+  rdfs:subClassOf vcare:Referral ;
+.
+vcare:SLE
+  rdf:type vcare:MultisystemDisease ;
+  rdfs:label "SLE" ;
+.
+vcare:SendAlertToMedicalPerson
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "send alert to medical person" ;
+.
+vcare:ShorttermEffect
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Shortterm effect" ;
+  rdfs:subClassOf vcare:Effect ;
+.
+vcare:ShowExerciseResults
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Show exercise results" ;
+.
+vcare:ShowVideoReport
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Show video report" ;
+.
+vcare:SimulationTask
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Simulation query" ;
+  rdfs:subClassOf rdfs:Resource ;
+  sh:property [
+      sh:path vcare:hasSPARQLQuery ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "has SPARQLQuery" ;
+    ] ;
+.
+vcare:SmokingCessation
+  rdf:type vcare:RegulativeActivity ;
+  rdfs:label "Smoking cessation" ;
+.
+vcare:State
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "State" ;
+  sh:property [
+      sh:path vcare:hasDiagnose ;
+      sh:class vcare:Diagnosis ;
+      sh:maxCount 1 ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path vcare:hasDisease ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path vcare:hasNextState ;
+      sh:class vcare:TargetState ;
+      sh:minCount 0 ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path vcare:hasPreviousState ;
+      sh:minCount 0 ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path vcare:hasReward ;
+      sh:datatype xsd:integer ;
+      sh:maxCount 1 ;
+      sh:nodeKind sh:Literal ;
+    ] ;
+  sh:property [
+      sh:path vcare:hasRule ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:nodeKind sh:Literal ;
+    ] ;
+  sh:property [
+      sh:path vcare:requiresActivity ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+.
+vcare:Statin
+  rdf:type rdfs:Class ;
+  rdfs:label "Statin" ;
+  rdfs:subClassOf vcare:Drug ;
+.
+vcare:StatinIntake
+  rdf:type vcare:DrugIntakeActivity ;
+  rdfs:label "Statin intake" ;
+.
+vcare:Stroke
+  rdf:type vcare:VascularDisease ;
+  rdfs:label "Stroke" ;
+.
+vcare:Swimming
+  rdf:type vcare:PhysicalActivity ;
+  rdfs:label "Swimming" ;
+.
+vcare:Symptom
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Symptom" ;
+  rdfs:subClassOf vcare:State ;
+.
+vcare:SymptomSimulation
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Symptom simulation" ;
+  rdfs:subClassOf vcare:SimulationTask ;
+.
+vcare:TIA
+  rdf:type vcare:VascularDisease ;
+  rdfs:label "TIA" ;
+.
+vcare:TargetA1C
+  rdf:type vcare:TargetState ;
+  vcare:hasReward 1 ;
+  rdfs:label "A1CTarget" ;
+.
+vcare:TargetBMI
+  rdf:type vcare:TargetState ;
+  vcare:hasReward 1 ;
+  rdfs:label "Target BMI" ;
+.
+vcare:TargetBloodpressure
+  rdf:type vcare:TargetState ;
+  vcare:hasReward 1 ;
+  rdfs:label "Target bloodpressure" ;
+.
+vcare:TargetBodyTemperature
+  rdf:type vcare:TargetState ;
+  vcare:hasReward 1 ;
+  rdfs:label "Target body temperature" ;
+.
+vcare:TargetFluidIntake
+  rdf:type vcare:TargetState ;
+  vcare:hasReward 1 ;
+  rdfs:label "Target fluid intake" ;
+.
+vcare:TargetHeartRate
+  rdf:type vcare:TargetState ;
+  vcare:hasReward 1 ;
+  rdfs:label "Target heart rate" ;
+.
+vcare:TargetSPO2
+  rdf:type vcare:TargetState ;
+  vcare:hasReward 1 ;
+  rdfs:label "Target SPO2" ;
+.
+vcare:TargetState
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Target" ;
+  rdfs:subClassOf vcare:State ;
+.
+vcare:TestACR
+  rdf:type vcare:PhysicianActivity ;
+  rdfs:label "Test ACR" ;
+.
+vcare:TestEGFR
+  rdf:type vcare:PhysicianActivity ;
+  rdfs:label "Test EFGR" ;
+.
+vcare:TestUrin
+  rdf:type vcare:MedicalTest ;
+  rdfs:label "Test urin" ;
+.
+vcare:TurnLightsOff
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Turn lights off" ;
+.
+vcare:TurnLightsOn
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Turn lights on" ;
+.
+vcare:TurnMusicOff
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Turn music off" ;
+.
+vcare:TurnMusicOn
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Turn music on" ;
+.
+vcare:TurnOnGame
+  rdf:type vcare:AgentActivity ;
+  rdfs:label "Turn on game" ;
+.
+vcare:UrgentReferral
+  rdf:type rdfs:Class ;
+  rdfs:label "Urgent referral" ;
+  rdfs:subClassOf vcare:Referral ;
+.
+vcare:Urinanalysis
+  rdf:type vcare:PhysicianActivity ;
+  rdfs:label "Urinanalysis" ;
+.
+vcare:UrinanalysisTested
+  rdf:type vcare:ContextState ;
+  rdfs:label "Urinanalysis tested" ;
+.
+vcare:UrinaryTractInfection
+  rdf:type vcare:ChronicalKidneyDisease ;
+  rdfs:label "Urinary tract infection" ;
+.
+vcare:UserCanlessAlert
+  rdf:type vcare:ContextState ;
+  rdfs:label "Can warning" ;
+.
+vcare:UserHasCKD
+  rdf:type vcare:Diagnosis ;
+  vcare:hasNextState vcare:TargetA1C ;
+  vcare:hasNextState vcare:TargetBMI ;
+  vcare:hasNextState vcare:TargetBloodpressure ;
+  vcare:hasPreviousState vcare:RetestedACR ;
+  vcare:hasPreviousState vcare:RetestedEGFR ;
+  vcare:hasPreviousState vcare:UrinanalysisTested ;
+  vcare:hasPreviousState vcare:UserHasCKDRisk ;
+  vcare:hasReward -1 ;
+  vcare:hasRule """vcare:UserHasCKDRisk vcare:isState true.
+vcare:TestACR vcare:hasDiagnose vcare:AnormalACR.
+vcare:TestEGFR vcare:hasDiagnose vcare:AnormalEGFR.
+vcare:RetestACR vcare:hasDiagnose vcare:AnormalACR.
+vcare:RetestEGFR vcare:hasDiagnose vcare:AnormalEGFR.
+vcare:Urinanalysis vcare:hasDiagnose vcare:Hematuria.""" ;
+  vcare:requiresActivity vcare:ACEiIntake ;
+  vcare:requiresActivity vcare:ARBIntake ;
+  vcare:requiresActivity vcare:AlcoholCessation ;
+  vcare:requiresActivity vcare:AntiplateletIntake ;
+  vcare:requiresActivity vcare:BMIControl ;
+  vcare:requiresActivity vcare:CKDEmergentReferral ;
+  vcare:requiresActivity vcare:CKDRoutineReferral ;
+  vcare:requiresActivity vcare:CKDUrgentReferral ;
+  vcare:requiresActivity vcare:ControlWeight ;
+  vcare:requiresActivity vcare:FluidIntake ;
+  vcare:requiresActivity vcare:IncreaseFruitVegatableConsumption ;
+  vcare:requiresActivity vcare:LowSodiumDiet ;
+  vcare:requiresActivity vcare:ReduceSaltConsumption ;
+  vcare:requiresActivity vcare:SmokingCessation ;
+  vcare:requiresActivity vcare:StatinIntake ;
+  rdfs:label "User has CKD" ;
+.
+vcare:UserHasCKDRisk
+  rdf:type vcare:Diagnosis ;
+  vcare:hasDiagnose vcare:Hypertension ;
+  vcare:hasDisease vcare:CardioVascularDisease ;
+  vcare:hasDisease vcare:DiabetesMellitusType2 ;
+  vcare:hasDisease vcare:PVD ;
+  vcare:hasDisease vcare:SLE ;
+  vcare:hasDisease vcare:Stroke ;
+  vcare:hasDisease vcare:TIA ;
+  rdfs:label "User has CKDRisk" ;
+.
+vcare:UserHasDiabetes
+  rdf:type vcare:Diagnosis ;
+  rdfs:label "User has diabetes" ;
+.
+vcare:UserHasHighBloodPressure
+  rdf:type vcare:Diagnosis ;
+  rdfs:label "User has high blood pressure" ;
+.
+vcare:UserHasIdealBloodpressure
+  rdf:type vcare:Diagnosis ;
+  rdfs:label "User has ideal bloodpressure" ;
+.
+vcare:UserHasLowBloodpressure
+  rdf:type vcare:Diagnosis ;
+  rdfs:label "User has low bloodpressure" ;
+.
+vcare:UserHasNoCKD
+  rdf:type vcare:Diagnosis ;
+  rdfs:label "User has no CKD" ;
+.
+vcare:UserHasNoCKDRisk
+  rdf:type vcare:Diagnosis ;
+  rdfs:label "User has no CKDRisk" ;
+.
+vcare:UserHasPreHighBloodpressure
+  rdf:type vcare:Diagnosis ;
+  rdfs:label "User has pre high bloodpressure" ;
+.
+vcare:UserHasToTakeMedication
+  rdf:type vcare:ContextState ;
+  rdfs:label "User has to take medication" ;
+.
+vcare:UserInBath
+  rdf:type vcare:ContextState ;
+  rdfs:label "User in bath" ;
+.
+vcare:UserInBedRoom
+  rdf:type vcare:ContextState ;
+  rdfs:label "User in bed room" ;
+.
+vcare:UserInFrontOfTV
+  rdf:type vcare:ContextState ;
+  rdfs:label "User in front of TV" ;
+.
+vcare:UserInKitchen
+  rdf:type vcare:ContextState ;
+  rdfs:label "User in kitchen" ;
+.
+vcare:UserInLivingRoom
+  rdf:type vcare:ContextState ;
+  rdfs:label "User in living room" ;
+.
+vcare:UserInactive
+  rdf:type vcare:ContextState ;
+  rdfs:label "User inactive" ;
+.
+vcare:UserIsEating
+  rdf:type vcare:ContextState ;
+  rdfs:label "User is eating" ;
+.
+vcare:UserIsOutdoor
+  rdf:type vcare:ContextState ;
+  rdfs:label "User is outdoor" ;
+.
+vcare:UserIsSmoking
+  rdf:type vcare:ContextState ;
+  rdfs:label "User is smoking" ;
+.
+vcare:UserIsStressed
+  rdf:type vcare:ContextState ;
+  rdfs:label "User is stressed" ;
+.
+vcare:UserLeavesHome
+  rdf:type vcare:ContextState ;
+  rdfs:label "User leaves home" ;
+.
+vcare:UserMovesFast
+  rdf:type vcare:ContextState ;
+  rdfs:label "User moves fast" ;
+.
+vcare:UserMovesSlow
+  rdf:type vcare:ContextState ;
+  rdfs:label "User moves slow" ;
+.
+vcare:UserPlaysMedicalGame
+  rdf:type vcare:ContextState ;
+  rdfs:label "User plays medical game" ;
+.
+vcare:UserReadyToStart
+  rdf:type vcare:ContextState ;
+  rdfs:label "User ready to start" ;
+.
+vcare:UserSittingOnTheSofa
+  rdf:type vcare:ContextState ;
+  rdfs:label "User sitting on the sofa" ;
+.
+vcare:UserSleeps
+  rdf:type vcare:ContextState ;
+  rdfs:label "User sleeps" ;
+.
+vcare:UserSwitchesTabletOff
+  rdf:type vcare:ContextState ;
+  rdfs:label "User switches tablet off" ;
+.
+vcare:UserSwitchesTabletOn
+  rdf:type vcare:ContextState ;
+  rdfs:label "User switches tablet on" ;
+.
+vcare:UserWatchesVideoTutorial
+  rdf:type vcare:ContextState ;
+  rdfs:label "User watches video tutorial" ;
+.
+vcare:UserWeaksUp
+  rdf:type vcare:ContextState ;
+  rdfs:label "User weaks up" ;
+.
+vcare:VascularDisease
+  rdf:type rdfs:Class ;
+  rdfs:label "Vascular disease" ;
+  rdfs:subClassOf vcare:Disease ;
+.
+vcare:VascularDiseasePatient
+  rdf:type rdfs:Class ;
+  rdfs:label "Vascular disease patient" ;
+  rdfs:subClassOf vcare:Patient ;
+.
+vcare:Walking
+  rdf:type vcare:PhysicalActivity ;
+  rdfs:label "Walking" ;
+.
+vcare:WatchTV
+  rdf:type vcare:LeisureActivity ;
+  rdfs:label "Watch TV" ;
+.
+vcare:WeightDecreased
+  rdf:type vcare:ContextState ;
+  rdfs:label "Weight decreased" ;
+.
+vcare:WeightIncreased
+  rdf:type vcare:ContextState ;
+  rdfs:label "Weight increased" ;
+.
+vcare:WetSurface
+  rdf:type vcare:ContextState ;
+  rdfs:label "Wet surface" ;
+.
+vcare:consistsOfActivity
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "consists of activity" ;
+  rdfs:range vcare:Activity ;
+.
+vcare:hasAction
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has action" ;
+.
+vcare:hasActivity
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has activity" ;
+  rdfs:range vcare:Activity ;
+.
+vcare:hasActivitySize
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has activity size" ;
+  rdfs:range xsd:integer ;
+.
+vcare:hasAge
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has age" ;
+  rdfs:range xsd:integer ;
+.
+vcare:hasConstraint
+  rdf:type rdf:Property ;
+  rdfs:label "has constraint" ;
+.
+vcare:hasCriterion
+  rdf:type rdf:Property ;
+  rdfs:label "has criterion" ;
+.
+vcare:hasDescription
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has description" ;
+.
+vcare:hasDiagnose
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has diagnose" ;
+  rdfs:range vcare:Diagnosis ;
+.
+vcare:hasDiastolicBloodpressure
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has diastolic bloodpressure" ;
+  rdfs:range xsd:decimal ;
+.
+vcare:hasDisease
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has disease" ;
+  rdfs:range vcare:Disease ;
+.
+vcare:hasDuration
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has duration" ;
+.
+vcare:hasEffect
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has effect" ;
+.
+vcare:hasExpertise
+  rdf:type rdf:Property ;
+  rdfs:label "has expertise" ;
+.
+vcare:hasFeatureSize
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has feature size" ;
+  rdfs:range xsd:integer ;
+.
+vcare:hasGender
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has gender" ;
+.
+vcare:hasLabel
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has label" ;
+  rdfs:range xsd:string ;
+.
+vcare:hasName
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has name" ;
+  rdfs:range xsd:string ;
+.
+vcare:hasNextState
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has next state" ;
+  rdfs:range vcare:State ;
+.
+vcare:hasPreviousState
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has previous state" ;
+  rdfs:range vcare:State ;
+.
+vcare:hasPriority
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has priority" ;
+  rdfs:range xsd:string ;
+.
+vcare:hasRangeEnd
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has range end" ;
+  rdfs:range xsd:decimal ;
+.
+vcare:hasRangeStart
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has range start" ;
+  rdfs:range xsd:decimal ;
+.
+vcare:hasReward
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has reward" ;
+  rdfs:range xsd:integer ;
+.
+vcare:hasRisk
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has risk" ;
+.
+vcare:hasRule
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has rule" ;
+  rdfs:range xsd:string ;
+.
+vcare:hasSPARQLQuery
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "vcarehas SPARQLQuery" ;
+  rdfs:range xsd:string ;
+.
+vcare:hasStage
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has stage" ;
+  rdfs:range xsd:integer ;
+.
+vcare:hasState
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has state" ;
+  rdfs:range vcare:State ;
+.
+vcare:hasStateSize
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has state size" ;
+  rdfs:range xsd:integer ;
+.
+vcare:hasStatus
+  rdf:type rdf:Property ;
+  rdfs:label "has status" ;
+.
+vcare:hasSubAction
+  rdf:type rdf:Property ;
+  rdfs:label "has sub action" ;
+.
+vcare:hasSymptom
+  rdf:type rdf:Property ;
+  rdfs:label "has symptom" ;
+  rdfs:range vcare:Symptom ;
+.
+vcare:hasSystolicBloodpressure
+  rdf:type rdf:Property ;
+  rdfs:label "has systolic bloodpressure" ;
+  rdfs:range xsd:decimal ;
+.
+vcare:hasTarget
+  rdf:type rdf:Property ;
+  rdfs:label "has target" ;
+  rdfs:range vcare:TargetState ;
+.
+vcare:hasType
+  rdf:type rdf:Property ;
+  rdfs:label "has type" ;
+.
+vcare:hasValue
+  rdf:type rdf:Property ;
+  rdfs:label "has value" ;
+.
+vcare:isExpertIn
+  rdf:type rdf:Property ;
+  rdfs:label "is expert in" ;
+.
+vcare:isInterestedInState
+  rdf:type rdf:Property ;
+  rdfs:label "is interested in state" ;
+.
+vcare:isPregnant
+  rdf:type rdf:Property ;
+  rdfs:label "is pregnant" ;
+  rdfs:range xsd:boolean ;
+.
+vcare:isSmoker
+  rdf:type rdf:Property ;
+  rdfs:label "is smoker" ;
+  rdfs:range xsd:boolean ;
+.
+vcare:isState
+  rdf:type rdf:Property ;
+  rdfs:label "is state" ;
+  rdfs:range xsd:boolean ;
+.
+vcare:performsActivity
+  rdf:type rdf:Property ;
+  rdfs:label "performs activity" ;
+.
+vcare:performsExercise
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "performs exercise" ;
+.
+vcare:playsGame
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "plays game" ;
+.
+vcare:provides
+  rdf:type rdf:Property ;
+  rdfs:label "provides event" ;
+  rdfs:range vcare:State ;
+.
+vcare:recommendsDrug
+  rdf:type rdf:Property ;
+  rdfs:label "recommends drug" ;
+  rdfs:range vcare:Drug ;
+.
+vcare:requiresActivity
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "requires activity" ;
+  rdfs:range vcare:Activity ;
+.
+vcare:requiresDrug
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "requires drug" ;
+  rdfs:range vcare:Drug ;
+.
+vcare:requiresMedicalPerson
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "requires medical person" ;
+.
+vcare:requiresPhysician
+  rdf:type rdf:Property ;
+  rdfs:label "requires physician" ;
+  rdfs:subPropertyOf vcare:requiresMedicalPerson ;
+.
+vcare:requiresTest
+  rdf:type rdf:Property ;
+  rdfs:label "requires test" ;
+.
+vcare:subscribesFor
+  rdf:type rdf:Property ;
+  rdfs:label "subscribes for" ;
+  rdfs:range vcare:State ;
+.

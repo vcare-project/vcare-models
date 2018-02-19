@@ -1,0 +1,304 @@
+# baseURI: http://vcare.eu/algorithms
+# imports: http://datashapes.org/dash
+# prefix: algorithms
+
+@prefix algorithms: <http://vcare.eu/algorithms#> .
+@prefix dash: <http://datashapes.org/dash#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://vcare.eu/algorithms>
+  rdf:type owl:Ontology ;
+  owl:imports <http://datashapes.org/dash> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+algorithms:ActivationFunction
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Activation function" ;
+  rdfs:subClassOf algorithms:AlgorithmParameter ;
+.
+algorithms:Algorithm
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Algorithm" ;
+  rdfs:subClassOf rdfs:Resource ;
+  sh:property [
+      sh:path algorithms:hasDiscountFactor ;
+      sh:datatype xsd:decimal ;
+      sh:maxCount 1 ;
+    ] ;
+  sh:property [
+      sh:path algorithms:hasEpisodes ;
+      sh:datatype xsd:integer ;
+      sh:maxCount 1 ;
+    ] ;
+  sh:property [
+      sh:path algorithms:hasInputSize ;
+      sh:datatype xsd:integer ;
+      sh:maxCount 1 ;
+    ] ;
+  sh:property [
+      sh:path algorithms:hasLearningRate ;
+      sh:datatype xsd:decimal ;
+      sh:maxCount 1 ;
+    ] ;
+  sh:property [
+      sh:path algorithms:hasMomentum ;
+      sh:datatype xsd:decimal ;
+      sh:maxCount 1 ;
+    ] ;
+  sh:property [
+      sh:path algorithms:hasOutputSize ;
+      sh:datatype xsd:integer ;
+      sh:maxCount 1 ;
+    ] ;
+.
+algorithms:AlgorithmParameter
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Algorithm parameter" ;
+  rdfs:subClassOf rdfs:Resource ;
+.
+algorithms:CARTAlgorithm
+  rdf:type algorithms:Classification ;
+  rdfs:label "CARTAlgorithm" ;
+.
+algorithms:Classification
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Classification" ;
+  rdfs:subClassOf algorithms:SupervisedLearning ;
+.
+algorithms:Clustering
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Clustering" ;
+  rdfs:subClassOf algorithms:UnsupervisedLearning ;
+.
+algorithms:CollaborativeFiltering
+  rdf:type algorithms:RatingAlgorithm ;
+  rdfs:label "Collaborative filtering" ;
+.
+algorithms:Convolutional
+  rdf:type algorithms:LayerType ;
+  rdfs:label "Convolutional" ;
+.
+algorithms:ConvolutionalLayer
+  rdf:type algorithms:Layer ;
+  algorithms:hasLayerType algorithms:Convolutional ;
+  algorithms:hasNeuronSize 10 ;
+  algorithms:isFullyConnected "true"^^xsd:boolean ;
+  rdfs:label "Convolutional layer" ;
+.
+algorithms:CostFunction
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Cost function" ;
+  rdfs:subClassOf algorithms:AlgorithmParameter ;
+  sh:property [
+      sh:path algorithms:hasName ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+    ] ;
+.
+algorithms:DeepNeuralNetwork
+  rdf:type algorithms:Classification ;
+  rdfs:label "Deep neural network" ;
+.
+algorithms:DeepQNetwork
+  rdf:type algorithms:ReinforcementLearning ;
+  rdfs:label "Deep QNetwork" ;
+.
+algorithms:DimensionalityReduction
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Dimensionality reduction" ;
+  rdfs:subClassOf algorithms:UnsupervisedLearning ;
+.
+algorithms:FullyConnected
+  rdf:type algorithms:LayerType ;
+  rdfs:label "Fully connected" ;
+.
+algorithms:FullyConnectedLayer
+  rdf:type algorithms:Layer ;
+  algorithms:hasLayerType algorithms:FullyConnected ;
+  algorithms:hasNeuronSize 10 ;
+  algorithms:isFullyConnected "true"^^xsd:boolean ;
+  rdfs:label "Fully connected layer" ;
+.
+algorithms:InverseReinforcementLearning
+  rdf:type algorithms:ReinforcementLearning ;
+  rdfs:label "Inverse reinforcement learning" ;
+.
+algorithms:KMeans
+  rdf:type algorithms:Clustering ;
+  rdfs:label "KMeans" ;
+.
+algorithms:KMedians
+  rdf:type algorithms:Clustering ;
+  rdfs:label "KMedians" ;
+.
+algorithms:KNN
+  rdf:type algorithms:Classification ;
+  rdfs:label "KNN" ;
+.
+algorithms:LatentSemanticAnalysis
+  rdf:type algorithms:RatingAlgorithm ;
+  rdfs:label "Latent semantic analysis" ;
+.
+algorithms:Layer
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Layer" ;
+  rdfs:subClassOf algorithms:AlgorithmParameter ;
+  sh:property [
+      sh:path algorithms:hasLayerType ;
+      sh:class algorithms:LayerType ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path algorithms:hasNeuronSize ;
+      sh:datatype xsd:integer ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+    ] ;
+  sh:property [
+      sh:path algorithms:isFullyConnected ;
+      sh:datatype xsd:boolean ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+    ] ;
+.
+algorithms:LayerType
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Layer type" ;
+  rdfs:subClassOf algorithms:AlgorithmParameter ;
+.
+algorithms:LinearRegression
+  rdf:type algorithms:Regression ;
+  rdfs:label "Linear regression" ;
+.
+algorithms:LogisticRegression
+  rdf:type algorithms:Classification ;
+  rdfs:label "Logistic regression" ;
+.
+algorithms:MeanSquaredError
+  rdf:type algorithms:CostFunction ;
+  rdfs:label "Mean squared error" ;
+.
+algorithms:PCA
+  rdf:type algorithms:DimensionalityReduction ;
+  rdfs:label "PCA" ;
+.
+algorithms:Q-Function
+  rdf:type algorithms:CostFunction ;
+  rdfs:label "Q-Function" ;
+.
+algorithms:QLearning
+  rdf:type algorithms:ReinforcementLearning ;
+  rdfs:label "QLearning" ;
+.
+algorithms:RatingAlgorithm
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Similarity measuring" ;
+  rdfs:subClassOf algorithms:Algorithm ;
+.
+algorithms:ReLU
+  rdf:type algorithms:ActivationFunction ;
+  rdfs:label "Re LU" ;
+.
+algorithms:Regression
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Regression" ;
+  rdfs:subClassOf algorithms:SupervisedLearning ;
+.
+algorithms:ReinforcementLearning
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Reinforcement learning" ;
+  rdfs:subClassOf algorithms:Algorithm ;
+.
+algorithms:Sigmoid
+  rdf:type algorithms:ActivationFunction ;
+  rdfs:label "Logistic function" ;
+.
+algorithms:SoftMax
+  rdf:type algorithms:ActivationFunction ;
+  rdfs:label "Soft max" ;
+.
+algorithms:SupervisedLearning
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Supervised learning" ;
+  rdfs:subClassOf algorithms:Algorithm ;
+.
+algorithms:UnsupervisedLearning
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Unsupervised learning" ;
+  rdfs:subClassOf algorithms:Algorithm ;
+.
+algorithms:hasDiscountFactor
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has discount factor" ;
+  rdfs:range xsd:decimal ;
+.
+algorithms:hasEpisodes
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has episodes" ;
+  rdfs:range xsd:integer ;
+.
+algorithms:hasInputSize
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has input size" ;
+  rdfs:range xsd:integer ;
+.
+algorithms:hasLayerType
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has layer type" ;
+  rdfs:range algorithms:LayerType ;
+.
+algorithms:hasLearningRate
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has learning rate" ;
+.
+algorithms:hasMomentum
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has momentum" ;
+  rdfs:range xsd:decimal ;
+.
+algorithms:hasName
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has name" ;
+  rdfs:range xsd:string ;
+.
+algorithms:hasNeuronSize
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has neuron size" ;
+  rdfs:range xsd:integer ;
+.
+algorithms:hasOutputSize
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has output size" ;
+  rdfs:range xsd:integer ;
+.
+algorithms:hasValue
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has value" ;
+  rdfs:range xsd:integer ;
+.
+algorithms:isFullyConnected
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "is fully connected" ;
+  rdfs:range xsd:boolean ;
+.
