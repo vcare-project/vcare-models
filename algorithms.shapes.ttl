@@ -112,7 +112,9 @@ algorithms:DeepNeuralNetwork
 .
 algorithms:DeepQNetwork
   rdf:type algorithms:ReinforcementLearning ;
-  rdfs:label "Deep QNetwork" ;
+  algorithms:hasEpisodes 1000 ;
+  algorithms:hasLearningRate 0.1 ;
+  rdfs:label "DeepQNetwork" ;
 .
 algorithms:DimensionalityReduction
   rdf:type rdfs:Class ;
