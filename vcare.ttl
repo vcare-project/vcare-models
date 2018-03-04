@@ -46,12 +46,10 @@ vcare:AgentActivity
   rdfs:subClassOf vcare:Activity ;
 .
 vcare:AnormalACR
-  rdf:type vcare:Diagnosis ;
   vcare:hasReward -1 ;
   rdfs:label "Anormal ACR" ;
 .
 vcare:AnormalEGFR
-  rdf:type vcare:Diagnosis ;
   vcare:hasReward -1 ;
   rdfs:label "Low EGFR" ;
 .
@@ -74,8 +72,8 @@ vcare:CKDPathway
   vcare:hasState vcare:TargetBMI ;
   vcare:hasState vcare:TargetBloodpressure ;
   vcare:hasState vcare:TargetFluidIntake ;
-  vcare:hasState vcare:UserHasCKD ;
   vcare:hasState vcare:UserHasCKDRisk ;
+  vcare:hasState vcare:UserHasCKDWithDiabetes ;
   vcare:hasState vcare:UserHasNoCKD ;
   vcare:hasState vcare:UserHasNoCKDRisk ;
   vcare:requiresActivity vcare:CheckCKDRisk ;
@@ -88,19 +86,19 @@ vcare:CKDRoutineReferral
 vcare:CKDSimulation
   rdf:type vcare:ClinicalPathwaySimulation ;
   vcare:hasSPARQLQuery """PREFIX vcare: <http://vcare.eu/vcare#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-SELECT DISTINCT ?instances ?targets ?activity
-WHERE { 
-?states rdfs:subClassOf vcare:State.
-?instances rdf:type ?states.
-?cp rdf:type vcare:ClinicalPathway.
-?cp rdfs:label \"CKDPathway\".
-?cp vcare:hasState ?instances.
-?activities rdfs:subClassOf vcare:Activity.
-?activity rdf:type ?activities.
-?cp vcare:requiresActivity ?activity.
-?targets rdf:type vcare:TargetState.
+SELECT ?state ?reward ?condition ?expr ?feat ?fType ?unit ?vecsize ?activity
+WHERE {
+    vcare:CKDPathway vcare:hasState ?state.
+    ?state vcare:hasReward ?reward.
+    OPTIONAL {?state vcare:hasCondition ?condition.
+        OPTIONAL {?condition vcare:hasConditionExpression ?expr.}
+        ?condition vcare:hasObservationFeature ?feat.
+        ?feat vcare:featureType ?fType.
+        OPTIONAL{?feat vcare:hasUnit ?unit.}
+        OPTIONAL {?feat vcare:hasVectorSize ?vecsize.}
+    }
+    OPTIONAL {?uc vcare:requiresActivity ?activity.}
 }""" ;
   rdfs:label "vcare CKDSimulation" ;
 .
@@ -141,8 +139,7 @@ vcare:ClinicalPathway
     ] ;
   sh:property [
       sh:path vcare:requiresActivity ;
-      sh:class vcare:PhysicianActivity ;
-      sh:maxCount 1 ;
+      sh:class vcare:Activity ;
       sh:minCount 1 ;
       sh:nodeKind sh:IRI ;
     ] ;
@@ -206,12 +203,6 @@ vcare:DiabetesMellitusType2
   rdf:type vcare:DiabetesMellitus ;
   rdfs:label "Diabetes mellitus type2" ;
 .
-vcare:Diagnosis
-  rdf:type rdfs:Class ;
-  rdf:type sh:NodeShape ;
-  rdfs:label "Diagnosis" ;
-  rdfs:subClassOf vcare:State ;
-.
 vcare:DiagnosisSimulation
   rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
@@ -273,8 +264,13 @@ vcare:Gender
       sh:nodeKind sh:Literal ;
     ] ;
 .
+vcare:HealthState
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Symptom" ;
+  rdfs:subClassOf vcare:State ;
+.
 vcare:Hematuria
-  rdf:type vcare:Diagnosis ;
   vcare:hasReward -1 ;
   rdfs:label "Hematuria" ;
 .
@@ -283,12 +279,10 @@ vcare:High
   rdfs:label "High" ;
 .
 vcare:Hypertension
-  rdf:type vcare:Diagnosis ;
   vcare:hasReward -1 ;
   rdfs:label "Hypertension" ;
 .
 vcare:Hypotension
-  rdf:type vcare:Diagnosis ;
   rdfs:label "Hypotension" ;
 .
 vcare:IncreasingHeartrate
@@ -372,13 +366,9 @@ vcare:Neuroligist
   rdfs:subClassOf vcare:Physician ;
 .
 vcare:NormalACR
-  rdf:type vcare:Diagnosis ;
-  vcare:hasRule "?value < 3" ;
   rdfs:label "Normal ACR" ;
 .
 vcare:NormalEGFR
-  rdf:type vcare:Diagnosis ;
-  vcare:hasRule "?value >= 60" ;
   rdfs:label "Normal EGFR" ;
 .
 vcare:PVD
@@ -433,11 +423,9 @@ vcare:RetestEGFR
   rdfs:label "Retest EGFR" ;
 .
 vcare:RetestedACR
-  rdf:type vcare:ContextState ;
   rdfs:label "Physician retested ACR" ;
 .
 vcare:RetestedEGFR
-  rdf:type vcare:ContextState ;
   rdfs:label "Physician retested EGFR" ;
 .
 vcare:Risk
@@ -486,12 +474,6 @@ vcare:State
   rdfs:label "State" ;
   sh:property [
       sh:path vcare:hasNextState ;
-      sh:class vcare:TargetState ;
-      sh:minCount 0 ;
-      sh:nodeKind sh:IRI ;
-    ] ;
-  sh:property [
-      sh:path vcare:hasPreviousState ;
       sh:minCount 0 ;
       sh:nodeKind sh:IRI ;
     ] ;
@@ -514,12 +496,6 @@ vcare:Statin
 vcare:Stroke
   rdf:type vcare:VascularDisease ;
   rdfs:label "Stroke" ;
-.
-vcare:Symptom
-  rdf:type rdfs:Class ;
-  rdf:type sh:NodeShape ;
-  rdfs:label "Symptom" ;
-  rdfs:subClassOf vcare:State ;
 .
 vcare:SymptomSimulation
   rdf:type rdfs:Class ;
@@ -594,7 +570,6 @@ vcare:Urinanalysis
   rdfs:label "Urinanalysis" ;
 .
 vcare:UrinanalysisTested
-  rdf:type vcare:ContextState ;
   rdfs:label "Urinanalysis tested" ;
 .
 vcare:UrinaryTractInfection
@@ -605,58 +580,39 @@ vcare:UserCanlessAlert
   rdf:type vcare:ContextState ;
   rdfs:label "Can warning" ;
 .
-vcare:UserHasCKD
-  rdf:type vcare:Diagnosis ;
+vcare:UserHasCKDRisk
+  rdf:type vcare:HealthState ;
+  rdfs:label "User has CKDRisk" ;
+.
+vcare:UserHasCKDWithDiabetes
+  rdf:type vcare:HealthState ;
   vcare:hasNextState vcare:TargetA1C ;
   vcare:hasNextState vcare:TargetBMI ;
   vcare:hasNextState vcare:TargetBloodpressure ;
-  vcare:hasPreviousState vcare:RetestedACR ;
-  vcare:hasPreviousState vcare:RetestedEGFR ;
-  vcare:hasPreviousState vcare:UrinanalysisTested ;
-  vcare:hasPreviousState vcare:UserHasCKDRisk ;
   vcare:hasReward -1 ;
   vcare:requiresActivity vcare:CKDEmergentReferral ;
   vcare:requiresActivity vcare:CKDRoutineReferral ;
   vcare:requiresActivity vcare:CKDUrgentReferral ;
   rdfs:label "User has CKD" ;
 .
-vcare:UserHasCKDRisk
-  rdf:type vcare:Diagnosis ;
-  vcare:hasDiagnose vcare:Hypertension ;
-  vcare:hasDisease vcare:CardioVascularDisease ;
-  vcare:hasDisease vcare:DiabetesMellitusType2 ;
-  vcare:hasDisease vcare:PVD ;
-  vcare:hasDisease vcare:SLE ;
-  vcare:hasDisease vcare:Stroke ;
-  vcare:hasDisease vcare:TIA ;
-  rdfs:label "User has CKDRisk" ;
-.
-vcare:UserHasDiabetes
-  rdf:type vcare:Diagnosis ;
-  rdfs:label "User has diabetes" ;
-.
 vcare:UserHasHighBloodPressure
-  rdf:type vcare:Diagnosis ;
   rdfs:label "User has high blood pressure" ;
 .
 vcare:UserHasIdealBloodpressure
-  rdf:type vcare:Diagnosis ;
   rdfs:label "User has ideal bloodpressure" ;
 .
 vcare:UserHasLowBloodpressure
-  rdf:type vcare:Diagnosis ;
   rdfs:label "User has low bloodpressure" ;
 .
 vcare:UserHasNoCKD
-  rdf:type vcare:Diagnosis ;
+  rdf:type vcare:HealthState ;
   rdfs:label "User has no CKD" ;
 .
 vcare:UserHasNoCKDRisk
-  rdf:type vcare:Diagnosis ;
+  rdf:type vcare:HealthState ;
   rdfs:label "User has no CKDRisk" ;
 .
 vcare:UserHasPreHighBloodpressure
-  rdf:type vcare:Diagnosis ;
   rdfs:label "User has pre high bloodpressure" ;
 .
 vcare:UserHasToTakeMedication
@@ -808,7 +764,6 @@ vcare:hasDescription
 vcare:hasDiagnose
   rdf:type owl:ObjectProperty ;
   rdfs:label "has diagnose" ;
-  rdfs:range vcare:Diagnosis ;
 .
 vcare:hasDiastolicBloodpressure
   rdf:type owl:DatatypeProperty ;
@@ -885,11 +840,6 @@ vcare:hasRisk
   rdf:type owl:ObjectProperty ;
   rdfs:label "has risk" ;
 .
-vcare:hasRule
-  rdf:type owl:DatatypeProperty ;
-  rdfs:label "has rule" ;
-  rdfs:range xsd:string ;
-.
 vcare:hasSPARQLQuery
   rdf:type owl:DatatypeProperty ;
   rdfs:label "vcarehas SPARQLQuery" ;
@@ -921,7 +871,7 @@ vcare:hasSubAction
 vcare:hasSymptom
   rdf:type rdf:Property ;
   rdfs:label "has symptom" ;
-  rdfs:range vcare:Symptom ;
+  rdfs:range vcare:HealthState ;
 .
 vcare:hasSystolicBloodpressure
   rdf:type rdf:Property ;
