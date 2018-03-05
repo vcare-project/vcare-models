@@ -560,6 +560,11 @@ vcare:EmergentReferral
 .
 vcare:EmergentReferralCKD
   rdf:type vcare:HealthState ;
+  vcare:hasCondition vcare:Hyperkalemia ;
+  vcare:hasCondition vcare:eGFRLower10 ;
+  vcare:hasReward 0 ;
+  vcare:hasRisk vcare:KidneyFailure ;
+  vcare:isTargetState "false"^^xsd:boolean ;
   rdfs:label "Emergent referral CKD" ;
 .
 vcare:EqualWeight
@@ -671,6 +676,12 @@ vcare:Hiking
   rdfs:label "Hiking" ;
   rdfs:subClassOf vcare:PhysicalActivity ;
 .
+vcare:Hyperkalemia
+  rdf:type vcare:ComparisonCondition ;
+  vcare:hasConditionExpression "Kalium: > 6.5" ;
+  vcare:hasObservationFeature vcare:Kalium ;
+  rdfs:label "Hyperkalemia" ;
+.
 vcare:Hypertension
   rdf:type vcare:RangeCondition ;
   vcare:hasConditionExpression "DiastolicValue: 90 - 100" ;
@@ -742,6 +753,17 @@ vcare:JazzDance
   vcare:hasEffect vcare:IncreasingHeartrate ;
   vcare:hasEffect vcare:LowerWeight ;
   rdfs:label "Jazz dance" ;
+.
+vcare:Kalium
+  rdf:type vcare:ObservationFeature ;
+  vcare:featureType vcare:Numerical ;
+  vcare:hasUnit "mmol/L" ;
+  vcare:hasVectorSize 1 ;
+  rdfs:label "Kalium" ;
+.
+vcare:KidneyFailure
+  rdf:type vcare:Risk ;
+  rdfs:label "Kidney failure" ;
 .
 vcare:KidneyStones
   vcare:featureType vcare:Nominal ;
@@ -1212,6 +1234,12 @@ vcare:RoutineReferral
 .
 vcare:RoutineReferralCKD
   rdf:type vcare:HealthState ;
+  vcare:hasCondition vcare:ACRGreater60 ;
+  vcare:hasCondition vcare:DecliningEGFR ;
+  vcare:hasCondition vcare:Hematuria ;
+  vcare:hasCondition vcare:eGFRLower30 ;
+  vcare:hasReward 0 ;
+  vcare:isTargetState "false"^^xsd:boolean ;
   rdfs:label "Routine referral CKD" ;
 .
 vcare:SLE
@@ -1491,7 +1519,10 @@ vcare:UrgentReferral
 .
 vcare:UrgentReferralCKD
   rdf:type vcare:HealthState ;
-  vcare:hasCondition vcare:AnormalEGFR ;
+  vcare:hasCondition vcare:ACRGreater180 ;
+  vcare:hasCondition vcare:DecliningEGFR ;
+  vcare:hasCondition vcare:Hematuria ;
+  vcare:hasCondition vcare:eGFRLower15 ;
   vcare:hasReward -1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
   rdfs:label "Urgent referral CKD" ;
