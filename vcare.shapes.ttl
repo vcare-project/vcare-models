@@ -26,6 +26,7 @@
 vcare:A1C
   rdf:type vcare:ObservationFeature ;
   vcare:featureType vcare:Numerical ;
+  vcare:hasUnit "%" ;
   vcare:hasVectorSize 1 ;
   rdfs:label "A1C" ;
 .
@@ -253,7 +254,7 @@ vcare:Biking
 .
 vcare:BladderCancer
   vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "BladderCancer: 1" ;
   vcare:hasVectorSize 1 ;
 .
 vcare:BodyTemperature
@@ -274,6 +275,16 @@ vcare:CKDEmergentReferral
   vcare:hasPreviousState vcare:UserHasCKDRisk ;
 .
 vcare:CKDPathway
+  vcare:hasState vcare:EmergentReferralCKD ;
+  vcare:hasState vcare:KidneyFailure ;
+  vcare:hasState vcare:RoutineReferralCKD ;
+  vcare:hasState vcare:UrgentReferralCKD ;
+  vcare:hasState vcare:UserHasCKDWithoutDiabetes ;
+  vcare:hasState vcare:UserHasToTakeMedication ;
+  vcare:hasState vcare:UserTookACEi ;
+  vcare:hasState vcare:UserTookARB ;
+  vcare:hasState vcare:UserTookAntiplatelet ;
+  vcare:hasState vcare:UserTookStatin ;
   vcare:hasState vcare:WeeklyPhysicalActivity ;
   vcare:requiresActivity vcare:ACEiIntakeWithDiabetes ;
   vcare:requiresActivity vcare:ACEiIntakeWithoutDiabetes ;
@@ -366,7 +377,7 @@ vcare:CanlessAlertService
 .
 vcare:CardioVascularDisease
   vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "CardioVascularDisease: 1" ;
   vcare:hasVectorSize 1 ;
 .
 vcare:Cardiologist
@@ -457,7 +468,7 @@ vcare:Dancing
 .
 vcare:DecliningEGFR
   rdf:type vcare:BooleanCondition ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "DecliningEGFR: 1" ;
   vcare:hasObservationFeature vcare:eGFR ;
   rdfs:label "Declininge GFR" ;
 .
@@ -498,7 +509,7 @@ vcare:DiabetesMellitusPatient
 .
 vcare:DiabetesMellitusType2
   vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "DiabetesMellitusType2: 1" ;
   vcare:hasVectorSize 1 ;
 .
 vcare:DiastolicValue
@@ -596,7 +607,7 @@ vcare:FallingRisk
 .
 vcare:FamilyHistoryStage5CKD
   rdf:type vcare:BooleanCondition ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "FamilyHistoryStage5CKD: 1" ;
   rdfs:label "Family history stage5CKD" ;
 .
 vcare:FastWalking
@@ -647,20 +658,23 @@ vcare:GiveAccousticFeedback
 .
 vcare:HeartRate
   rdf:type vcare:ObservationFeature ;
+  vcare:featureType vcare:Numerical ;
+  vcare:hasUnit "beats/min" ;
+  vcare:hasVectorSize 1 ;
   rdfs:label "Heart rate" ;
 .
 vcare:Hematuria
   rdf:type vcare:BooleanCondition ;
   rdf:type vcare:ObservationFeature ;
   vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "Hematuria: 1" ;
   vcare:hasObservationFeature vcare:UrinAnalysis ;
   vcare:hasVectorSize 1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
 .
 vcare:HereditaryCKD
   rdf:type vcare:BooleanCondition ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "HereditaryCKD: 1" ;
   rdfs:label "Hereditary CKD" ;
 .
 vcare:HighSeverityHiking
@@ -767,7 +781,7 @@ vcare:KidneyFailure
 .
 vcare:KidneyStones
   vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "KidneyStones: 1" ;
   vcare:hasObservationFeature vcare:KidneyStones ;
   vcare:hasVectorSize 1 ;
 .
@@ -880,9 +894,19 @@ vcare:Neuroligist
 .
 vcare:NoSmoker
   rdf:type vcare:BooleanCondition ;
-  vcare:hasConditionExpression "0" ;
+  vcare:hasConditionExpression "Smoker: 0" ;
   vcare:hasObservationFeature vcare:SmokeHabit ;
   rdfs:label "No smoker" ;
+.
+vcare:NoStroke
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "Stroke: 0" ;
+  rdfs:label "No stroke" ;
+.
+vcare:NoTIA
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "TIA: 0" ;
+  rdfs:label "No TIA" ;
 .
 vcare:Nominal
   rdf:type vcare:FeatureType ;
@@ -970,7 +994,7 @@ vcare:Ordinal
 .
 vcare:PVD
   vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "PVD: 1" ;
   vcare:hasObservationFeature vcare:PVD ;
   vcare:hasVectorSize 1 ;
 .
@@ -1198,7 +1222,7 @@ vcare:RetestedACR
   rdf:type vcare:BooleanCondition ;
   vcare:hasCondition vcare:AnormalACR ;
   vcare:hasCondition vcare:RetestedACR ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "RetestedACR: 1" ;
   vcare:hasNextState vcare:RetestedACR ;
   vcare:hasNextState vcare:RetestedEGFR ;
   vcare:hasNextState vcare:UrinanalysisTested ;
@@ -1213,7 +1237,7 @@ vcare:RetestedEGFR
   rdf:type vcare:BooleanCondition ;
   vcare:hasCondition vcare:AnormalEGFR ;
   vcare:hasCondition vcare:RetestedEGFR ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "RetestedEGFR: 1" ;
   vcare:hasNextState vcare:RetestedACR ;
   vcare:hasNextState vcare:RetestedEGFR ;
   vcare:hasNextState vcare:UrinanalysisTested ;
@@ -1244,7 +1268,7 @@ vcare:RoutineReferralCKD
 .
 vcare:SLE
   vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "SLE: 1" ;
   vcare:hasObservationFeature vcare:SLE ;
   vcare:hasVectorSize 1 ;
 .
@@ -1332,7 +1356,7 @@ vcare:SmokeHabit
 .
 vcare:Smoker
   rdf:type vcare:BooleanCondition ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "Smoker: 1" ;
   vcare:hasObservationFeature vcare:SmokeHabit ;
   rdfs:label "Smoker" ;
 .
@@ -1404,7 +1428,7 @@ vcare:StatinIntakeWithoutDiabetes
 .
 vcare:Stroke
   vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "Stroke: 1" ;
   vcare:hasObservationFeature vcare:Stroke ;
   vcare:hasVectorSize 1 ;
 .
@@ -1422,7 +1446,7 @@ vcare:SystolicValue
 .
 vcare:TIA
   vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "TIA: 1" ;
   vcare:hasObservationFeature vcare:TIA ;
   vcare:hasVectorSize 1 ;
 .
@@ -1523,7 +1547,7 @@ vcare:UrgentReferralCKD
   vcare:hasCondition vcare:DecliningEGFR ;
   vcare:hasCondition vcare:Hematuria ;
   vcare:hasCondition vcare:eGFRLower15 ;
-  vcare:hasReward -1 ;
+  vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
   rdfs:label "Urgent referral CKD" ;
 .
@@ -1536,14 +1560,14 @@ vcare:UrinAnalysis
 vcare:UrinanalysisTested
   rdf:type vcare:BooleanCondition ;
   vcare:hasCondition vcare:UrinanalysisTested ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "UrinAnalysisTested: 1" ;
   vcare:hasObservationFeature vcare:UrinAnalysis ;
   vcare:hasReward 1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
 .
 vcare:UrinaryTractInfection
   vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "UrinTractInfection: 1" ;
   vcare:hasObservationFeature vcare:UrinAnalysis ;
   vcare:hasObservationFeature vcare:UrinaryTractInfection ;
   vcare:hasVectorSize 1 ;
@@ -1582,7 +1606,7 @@ vcare:UserHasCKDRisk
   vcare:hasCondition vcare:UrinaryTractInfection ;
   vcare:hasCondition vcare:UserHasHighBloodPressure ;
   vcare:hasCondition vcare:UserHasPreHighBloodpressure ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "UserHasCKDRisk: 1" ;
   vcare:hasInteractionText """Testing for CKD should not be universal, but should be targeted for individuals at increased risk of developing CKD:
 * Hypertension
 * Diabetes Mellitus
@@ -1738,7 +1762,7 @@ vcare:UserHasNoCKDRisk
   vcare:hasCondition vcare:NormalBMI ;
   vcare:hasCondition vcare:NormalEGFR ;
   vcare:hasCondition vcare:UserHasIdealBloodpressure ;
-  vcare:hasConditionExpression "0" ;
+  vcare:hasConditionExpression "UserHasCKDRisk: 0" ;
   vcare:hasNextState vcare:UserHasNoCKD ;
   vcare:hasObservationFeature vcare:A1C ;
   vcare:hasObservationFeature vcare:ACR ;
@@ -1817,7 +1841,7 @@ vcare:UserIsOutdoor
 .
 vcare:UserIsPregnant
   rdf:type vcare:BooleanCondition ;
-  vcare:hasConditionExpression "1" ;
+  vcare:hasConditionExpression "Pregnant: 1" ;
   vcare:hasObservationFeature vcare:Pregnancy ;
   rdfs:label "Pregnancy" ;
 .
@@ -2169,6 +2193,9 @@ vcare:targetsActivity
 ].
 [
   sh:class vcare:State ;
+].
+[
+  sh:minCount 1 ;
 ].
 [
   sh:minCount 1 ;
