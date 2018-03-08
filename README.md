@@ -9,8 +9,9 @@
  - Ordinal (currently not used)
 
 # Reasoning and RDF stores
-- Currently, we use GraphDB see [GraphDB Link](http://graphdb.ontotext.com/) from Ontotext.
+- Currently, we use GraphDB (see [GraphDB Link](http://graphdb.ontotext.com/)) from Ontotext.
   - It allows nice graph representations and is also freely available.
+  - In order to integrate the schema into GraphDB, you have to install GraphDB and import the following files into GraphDB  `vcare.shapes.ttl, vcare.ttl` and `algorithms.shapes.ttl`.
   
 - we need some reasoning to be automatically avaialable within the store
 - at the moment, it is not clear which "regime" is needed
