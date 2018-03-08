@@ -1,9 +1,17 @@
 # vcare-models
 
-- we need to keep the modeling elements simple as possible
-- we want to define ontology elements specific to our use cases in vcare and later map them to existing ontologies. (instead of importing huge ontologies first). I'm not sure it it is always possible.
+- The vcare-model contains SCHACL shape definitions that are in particular used for the vCare simulator component.
+- The general structure of the vcare-simulation model consists of simulation descriptions that contain different states of interest   of a use case. A use case can be a clinical pathway or other use cases that are considered in the vCare project.
+- Every state is related/defined by conditions. A condition can be a range condition, a boolean condition or a value condition.
+- Moreover, every condition is related to an observation feature. This observation feature shapes define which kind of observation of the environment or of the patient can be made. There are three different kind of observation features:
+ - Numerical
+ - Nominal
+ - Ordinal (currently not used)
 
 # Reasoning and RDF stores
+- Currently, we use GraphDB see [GraphDB Link](http://graphdb.ontotext.com/) from Ontotext.
+  - It allows nice graph representations and is also freely available.
+  
 - we need some reasoning to be automatically avaialable within the store
 - at the moment, it is not clear which "regime" is needed
 - Some reasoners:
