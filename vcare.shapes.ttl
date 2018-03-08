@@ -255,6 +255,7 @@ vcare:Biking
 vcare:BladderCancer
   vcare:featureType vcare:Nominal ;
   vcare:hasConditionExpression "BladderCancer: 1" ;
+  vcare:hasObservationFeature vcare:BladderCancer ;
   vcare:hasVectorSize 1 ;
 .
 vcare:BodyTemperature
@@ -338,10 +339,13 @@ vcare:CKDSimulation
   vcare:hasObservationFeature vcare:CardioVascularDisease ;
   vcare:hasObservationFeature vcare:DiabetesMellitusType2 ;
   vcare:hasObservationFeature vcare:DiastolicValue ;
+  vcare:hasObservationFeature vcare:FamilyHistoryStage5CKD ;
   vcare:hasObservationFeature vcare:Hematuria ;
+  vcare:hasObservationFeature vcare:HereditaryCKD ;
+  vcare:hasObservationFeature vcare:Kalium ;
   vcare:hasObservationFeature vcare:KidneyStones ;
   vcare:hasObservationFeature vcare:PVD ;
-  vcare:hasObservationFeature vcare:Pregnancy ;
+  vcare:hasObservationFeature vcare:Potassium ;
   vcare:hasObservationFeature vcare:SLE ;
   vcare:hasObservationFeature vcare:Stroke ;
   vcare:hasObservationFeature vcare:SystolicValue ;
@@ -378,6 +382,7 @@ vcare:CanlessAlertService
 vcare:CardioVascularDisease
   vcare:featureType vcare:Nominal ;
   vcare:hasConditionExpression "CardioVascularDisease: 1" ;
+  vcare:hasObservationFeature vcare:CardioVascularDisease ;
   vcare:hasVectorSize 1 ;
 .
 vcare:Cardiologist
@@ -444,6 +449,7 @@ vcare:Condition
   sh:property [
       sh:path vcare:hasObservationFeature ;
       sh:class vcare:ObservationFeature ;
+      sh:minCount 1 ;
       sh:name "has observation feature" ;
       sh:nodeKind sh:IRI ;
     ] ;
@@ -465,12 +471,6 @@ vcare:Dancing
   rdf:type sh:NodeShape ;
   rdfs:label "Dancing" ;
   rdfs:subClassOf vcare:PhysicalActivity ;
-.
-vcare:DecliningEGFR
-  rdf:type vcare:BooleanCondition ;
-  vcare:hasConditionExpression "DecliningEGFR: 1" ;
-  vcare:hasObservationFeature vcare:eGFR ;
-  rdfs:label "Declininge GFR" ;
 .
 vcare:DecreaseHeartrate
   rdf:type vcare:ShorttermEffect ;
@@ -510,6 +510,7 @@ vcare:DiabetesMellitusPatient
 vcare:DiabetesMellitusType2
   vcare:featureType vcare:Nominal ;
   vcare:hasConditionExpression "DiabetesMellitusType2: 1" ;
+  vcare:hasObservationFeature vcare:DiabetesMellitusType2 ;
   vcare:hasVectorSize 1 ;
 .
 vcare:DiastolicValue
@@ -579,11 +580,7 @@ vcare:EmergentReferralCKD
   rdfs:label "Emergent referral CKD" ;
 .
 vcare:EqualWeight
-  vcare:hasCondition vcare:WeightDecreased ;
-  vcare:hasCondition vcare:WeightIncreased ;
   vcare:hasNextState vcare:EqualWeight ;
-  vcare:hasNextState vcare:WeightDecreased ;
-  vcare:hasNextState vcare:WeightIncreased ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
 .
@@ -607,7 +604,11 @@ vcare:FallingRisk
 .
 vcare:FamilyHistoryStage5CKD
   rdf:type vcare:BooleanCondition ;
+  rdf:type vcare:ObservationFeature ;
+  vcare:featureType vcare:Nominal ;
   vcare:hasConditionExpression "FamilyHistoryStage5CKD: 1" ;
+  vcare:hasObservationFeature vcare:FamilyHistoryStage5CKD ;
+  vcare:hasVectorSize 1 ;
   rdfs:label "Family history stage5CKD" ;
 .
 vcare:FastWalking
@@ -668,13 +669,17 @@ vcare:Hematuria
   rdf:type vcare:ObservationFeature ;
   vcare:featureType vcare:Nominal ;
   vcare:hasConditionExpression "Hematuria: 1" ;
-  vcare:hasObservationFeature vcare:UrinAnalysis ;
+  vcare:hasObservationFeature vcare:Hematuria ;
   vcare:hasVectorSize 1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
 .
 vcare:HereditaryCKD
   rdf:type vcare:BooleanCondition ;
+  rdf:type vcare:Disease ;
+  vcare:featureType vcare:Nominal ;
   vcare:hasConditionExpression "HereditaryCKD: 1" ;
+  vcare:hasObservationFeature vcare:HereditaryCKD ;
+  vcare:hasVectorSize 1 ;
   rdfs:label "Hereditary CKD" ;
 .
 vcare:HighSeverityHiking
@@ -892,21 +897,47 @@ vcare:Nephrologist
 vcare:Neuroligist
   rdf:type sh:NodeShape ;
 .
+vcare:NoHematuria
+  rdf:type vcare:BooleanCondition ;
+  vcare:hasConditionExpression "Hematuria: 0" ;
+  vcare:hasObservationFeature vcare:Hematuria ;
+  rdfs:label "No hematuria" ;
+.
+vcare:NoPVD
+  rdf:type vcare:BooleanCondition ;
+  vcare:hasConditionExpression "PVD: 0" ;
+  vcare:hasObservationFeature vcare:PVD ;
+  rdfs:label "No PVD" ;
+.
+vcare:NoSLE
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "SLE: 0" ;
+  vcare:hasObservationFeature vcare:SLE ;
+  rdfs:label "No SLE" ;
+.
 vcare:NoSmoker
   rdf:type vcare:BooleanCondition ;
   vcare:hasConditionExpression "Smoker: 0" ;
-  vcare:hasObservationFeature vcare:SmokeHabit ;
+  vcare:hasObservationFeature vcare:Smoker ;
   rdfs:label "No smoker" ;
 .
 vcare:NoStroke
   rdf:type vcare:Condition ;
   vcare:hasConditionExpression "Stroke: 0" ;
+  vcare:hasObservationFeature vcare:Stroke ;
   rdfs:label "No stroke" ;
 .
 vcare:NoTIA
   rdf:type vcare:Condition ;
   vcare:hasConditionExpression "TIA: 0" ;
+  vcare:hasObservationFeature vcare:TIA ;
   rdfs:label "No TIA" ;
+.
+vcare:NoUrinaryTractInfection
+  rdf:type vcare:BooleanCondition ;
+  vcare:hasConditionExpression "UrinaryTractInfection: 0" ;
+  vcare:hasObservationFeature vcare:UrinaryTractInfection ;
+  rdfs:label "No urinary tract infection" ;
 .
 vcare:Nominal
   rdf:type vcare:FeatureType ;
@@ -1129,13 +1160,6 @@ vcare:Pregnancy
   vcare:hasVectorSize 1 ;
   rdfs:label "Pregnancy" ;
 .
-vcare:PreviousWeight
-  rdf:type vcare:ObservationFeature ;
-  vcare:featureType vcare:Numerical ;
-  vcare:hasUnit "kg" ;
-  vcare:hasVectorSize 1 ;
-  rdfs:label "Previous weight" ;
-.
 vcare:Priority
   sh:hasValue vcare:High ;
   sh:hasValue vcare:Low ;
@@ -1259,7 +1283,6 @@ vcare:RoutineReferral
 vcare:RoutineReferralCKD
   rdf:type vcare:HealthState ;
   vcare:hasCondition vcare:ACRGreater60 ;
-  vcare:hasCondition vcare:DecliningEGFR ;
   vcare:hasCondition vcare:Hematuria ;
   vcare:hasCondition vcare:eGFRLower30 ;
   vcare:hasReward 0 ;
@@ -1348,16 +1371,13 @@ vcare:SlowWalking
   vcare:hasEffect vcare:LowerWeight ;
   rdfs:label "Slow walking" ;
 .
-vcare:SmokeHabit
-  rdf:type vcare:ObservationFeature ;
-  vcare:featureType vcare:Nominal ;
-  vcare:hasVectorSize 1 ;
-  rdfs:label "Smoke habit" ;
-.
 vcare:Smoker
   rdf:type vcare:BooleanCondition ;
+  rdf:type vcare:ObservationFeature ;
+  vcare:featureType vcare:Nominal ;
   vcare:hasConditionExpression "Smoker: 1" ;
-  vcare:hasObservationFeature vcare:SmokeHabit ;
+  vcare:hasObservationFeature vcare:Smoker ;
+  vcare:hasVectorSize 1 ;
   rdfs:label "Smoker" ;
 .
 vcare:SmokingCessation
@@ -1544,7 +1564,6 @@ vcare:UrgentReferral
 vcare:UrgentReferralCKD
   rdf:type vcare:HealthState ;
   vcare:hasCondition vcare:ACRGreater180 ;
-  vcare:hasCondition vcare:DecliningEGFR ;
   vcare:hasCondition vcare:Hematuria ;
   vcare:hasCondition vcare:eGFRLower15 ;
   vcare:hasReward 0 ;
@@ -1557,6 +1576,12 @@ vcare:UrinAnalysis
   vcare:hasVectorSize 1 ;
   rdfs:label "Urinanalisys" ;
 .
+vcare:UrinAnalysisNotTested
+  rdf:type vcare:BooleanCondition ;
+  vcare:hasConditionExpression "UrinAnalyisis: 0" ;
+  vcare:hasObservationFeature vcare:UrinAnalysis ;
+  rdfs:label "Urin analyse not tested" ;
+.
 vcare:UrinanalysisTested
   rdf:type vcare:BooleanCondition ;
   vcare:hasCondition vcare:UrinanalysisTested ;
@@ -1568,7 +1593,6 @@ vcare:UrinanalysisTested
 vcare:UrinaryTractInfection
   vcare:featureType vcare:Nominal ;
   vcare:hasConditionExpression "UrinTractInfection: 1" ;
-  vcare:hasObservationFeature vcare:UrinAnalysis ;
   vcare:hasObservationFeature vcare:UrinaryTractInfection ;
   vcare:hasVectorSize 1 ;
 .
@@ -1618,6 +1642,21 @@ vcare:UserHasCKDRisk
 """ ;
   vcare:hasNextState vcare:UserHasCKDRisk ;
   vcare:hasNextState vcare:UserHasCKDWithDiabetes ;
+  vcare:hasObservationFeature vcare:BladderCancer ;
+  vcare:hasObservationFeature vcare:CardioVascularDisease ;
+  vcare:hasObservationFeature vcare:DiabetesMellitusType2 ;
+  vcare:hasObservationFeature vcare:DiastolicValue ;
+  vcare:hasObservationFeature vcare:FamilyHistoryStage5CKD ;
+  vcare:hasObservationFeature vcare:Hematuria ;
+  vcare:hasObservationFeature vcare:HereditaryCKD ;
+  vcare:hasObservationFeature vcare:KidneyStones ;
+  vcare:hasObservationFeature vcare:PVD ;
+  vcare:hasObservationFeature vcare:SLE ;
+  vcare:hasObservationFeature vcare:Stroke ;
+  vcare:hasObservationFeature vcare:SystolicValue ;
+  vcare:hasObservationFeature vcare:TIA ;
+  vcare:hasObservationFeature vcare:UrinAnalysis ;
+  vcare:hasObservationFeature vcare:UrinaryTractInfection ;
   vcare:hasReward -1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
   vcare:requiresActivity vcare:RetestACR ;
@@ -1757,6 +1796,11 @@ vcare:UserHasNoCKD
 .
 vcare:UserHasNoCKDRisk
   rdf:type vcare:BooleanCondition ;
+  vcare:hasCondition vcare:NoHematuria ;
+  vcare:hasCondition vcare:NoPVD ;
+  vcare:hasCondition vcare:NoSLE ;
+  vcare:hasCondition vcare:NoStroke ;
+  vcare:hasCondition vcare:NoTIA ;
   vcare:hasCondition vcare:NormalA1C ;
   vcare:hasCondition vcare:NormalACR ;
   vcare:hasCondition vcare:NormalBMI ;
@@ -2018,24 +2062,6 @@ vcare:Weight
   vcare:hasUnit "kg" ;
   vcare:hasVectorSize 1 ;
   rdfs:label "Weight" ;
-.
-vcare:WeightDecreased
-  rdf:type vcare:ComparisonCondition ;
-  vcare:hasConditionExpression "PreviousWeight  > Weight" ;
-  vcare:hasObservationFeature vcare:PreviousWeight ;
-  vcare:hasObservationFeature vcare:Weight ;
-  vcare:hasReward 0 ;
-  vcare:isTargetState "false"^^xsd:boolean ;
-  rdfs:label "Previous weight" ;
-.
-vcare:WeightIncreased
-  rdf:type vcare:ComparisonCondition ;
-  vcare:hasConditionExpression "PreviousWeight < Weight" ;
-  vcare:hasObservationFeature vcare:PreviousWeight ;
-  vcare:hasObservationFeature vcare:Weight ;
-  vcare:hasReward 0 ;
-  vcare:isTargetState "false"^^xsd:boolean ;
-  rdfs:label "Current weight" ;
 .
 vcare:WetSurface
   vcare:hasReward -1 ;

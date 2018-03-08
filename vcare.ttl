@@ -713,14 +713,6 @@ vcare:VascularDiseasePatient
   rdfs:label "Vascular disease patient" ;
   rdfs:subClassOf vcare:Patient ;
 .
-vcare:WeightDecreased
-  rdf:type vcare:ContextState ;
-  rdfs:label "Weight decreased" ;
-.
-vcare:WeightIncreased
-  rdf:type vcare:ContextState ;
-  rdfs:label "Weight increased" ;
-.
 vcare:WetSurface
   rdf:type vcare:ContextState ;
   rdfs:label "Wet surface" ;
