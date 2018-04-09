@@ -1,26 +1,12 @@
 # baseURI: http://vcare.eu/vcare.shapes
 # imports: http://datashapes.org/dash
-# imports: http://datashapes.org/schema
-# imports: http://topbraid.org/schema.ui
-# imports: http://topbraid.org/schema/
-# imports: http://topbraid.org/schema/schema-single-range
-# imports: http://topbraid.org/schemaconverter
-# imports: http://topbraid.org/spin/schemaspin
-# imports: http://vcare.eu/vcare
-# imports: http://www.fao.org/countryprofiles/geoinfo/geopolitical/resource/geopolitical.owl
 
-@prefix : <http://vcare.eu/vcare#> .
 @prefix dash: <http://datashapes.org/dash#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix resource: <http://www.fao.org/countryprofiles/geoinfo/geopolitical/resource/> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix spin: <http://spinrdf.org/spin#> .
-@prefix swa: <http://topbraid.org/swa#> .
-@prefix tosh: <http://topbraid.org/tosh#> .
 @prefix vcare: <http://vcare.eu/vcare#> .
-@prefix xhtm: <http://www.w3.org/1999/xhtml> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 vcare:A1C
@@ -31,7 +17,11 @@ vcare:A1C
   rdfs:label "A1C" ;
 .
 vcare:ACEi
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "ACEi" ;
+  rdfs:subClassOf vcare:Drug ;
+  owl:equivalentClass vcare:ARB ;
 .
 vcare:ACEiIntake
   rdf:type rdfs:Class ;
@@ -71,8 +61,16 @@ vcare:ACRGreater60
   vcare:hasObservationFeature vcare:ACR ;
   rdfs:label "ACRGreater60" ;
 .
+vcare:ACRTest
+  rdf:type vcare:MedicalTest ;
+  rdfs:label "ACRTest" ;
+.
 vcare:ARB
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "ARB" ;
+  rdfs:subClassOf vcare:Drug ;
+  owl:equivalentClass vcare:ACEi ;
 .
 vcare:ARBIntake
   rdf:type rdfs:Class ;
@@ -93,8 +91,10 @@ vcare:ARBIntakeWithoutDiabetes
   rdfs:label "ARBIntake without diabetes" ;
 .
 vcare:Activity
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Activity" ;
   rdfs:subClassOf rdfs:Resource ;
-  owl:equivalentClass <http://schema.org/Action> ;
   sh:property [
       sh:path vcare:hasDuration ;
       sh:datatype xsd:decimal ;
@@ -139,22 +139,29 @@ vcare:Activity
       sh:nodeKind sh:IRI ;
     ] ;
 .
-vcare:ActivityCount
-  rdf:type sh:SPARQLConstraint ;
-  rdfs:label "Activity count" ;
-  sh:select """PREFIX vcare: <http://vcare.eu/vcare#>
-SELECT $this  (COUNT(?activity) as ?activitycount)
-WHERE { 
-$this vcare:simulatesUseCase ?uc.
-?uc vcare:requiresActivity ?activity.
-} GROUP BY $this""" ;
-.
-vcare:ActivitySize
-  rdf:type sh:SPARQLConstraint ;
-  rdfs:label "Activity size" ;
+vcare:Agent
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Agent" ;
+  rdfs:subClassOf rdfs:Resource ;
+  sh:property [
+      sh:path vcare:hasName ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+    ] ;
+  sh:property [
+      sh:path vcare:isInState ;
+      sh:class vcare:State ;
+      sh:maxCount 1 ;
+      sh:nodeKind sh:IRI ;
+    ] ;
 .
 vcare:AgentActivity
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Agent activity" ;
+  rdfs:subClassOf vcare:Activity ;
 .
 vcare:AlcoholCessation
   rdf:type vcare:BehaviourRegulationActivity ;
@@ -170,7 +177,9 @@ vcare:AnormalACR
   rdf:type vcare:ComparisonCondition ;
   vcare:hasConditionExpression "ACR: >= 3" ;
   vcare:hasObservationFeature vcare:ACR ;
+  vcare:hasReward -1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "Anormal ACR" ;
 .
 vcare:AnormalBMI
   rdf:type vcare:RangeCondition ;
@@ -190,7 +199,9 @@ vcare:AnormalEGFR
   rdf:type vcare:ComparisonCondition ;
   vcare:hasConditionExpression "eGFR: < 60" ;
   vcare:hasObservationFeature vcare:eGFR ;
+  vcare:hasReward -1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "Low EGFR" ;
 .
 vcare:AnormalPotassium
   rdf:type vcare:ComparisonCondition ;
@@ -199,7 +210,10 @@ vcare:AnormalPotassium
   rdfs:label "Anormal potassium" ;
 .
 vcare:Antiplatelet
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Antiplatelet" ;
+  rdfs:subClassOf vcare:Drug ;
 .
 vcare:AntiplateletIntake
   rdf:type rdfs:Class ;
@@ -252,12 +266,6 @@ vcare:Biking
   rdfs:label "Biking" ;
   rdfs:subClassOf vcare:PhysicalActivity ;
 .
-vcare:BladderCancer
-  vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "BladderCancer: 1" ;
-  vcare:hasObservationFeature vcare:BladderCancer ;
-  vcare:hasVectorSize 1 ;
-.
 vcare:BodyTemperature
   rdf:type vcare:ObservationFeature ;
   vcare:featureType vcare:Numerical ;
@@ -271,17 +279,31 @@ vcare:BooleanCondition
   rdfs:label "Boolean condition" ;
   rdfs:subClassOf vcare:Condition ;
 .
+vcare:BrightnessInLUX
+  rdf:type vcare:ObservationFeature ;
+  vcare:featureType vcare:Numerical ;
+  vcare:hasUnit "LUX" ;
+  vcare:hasVectorSize 1 ;
+  rdfs:label "Brightness in LUX" ;
+.
 vcare:CKDEmergentReferral
+  rdf:type vcare:EmergentReferral ;
   vcare:hasPreviousState vcare:EmergentReferralCKD ;
   vcare:hasPreviousState vcare:UserHasCKDRisk ;
+  rdfs:label "CKDEmergent referral" ;
 .
 vcare:CKDPathway
+  rdf:type vcare:UseCase ;
   vcare:hasState vcare:EmergentReferralCKD ;
-  vcare:hasState vcare:KidneyFailure ;
   vcare:hasState vcare:RoutineReferralCKD ;
+  vcare:hasState vcare:TargetA1C ;
+  vcare:hasState vcare:TargetBMI ;
+  vcare:hasState vcare:TargetBloodpressure ;
+  vcare:hasState vcare:TargetFluidIntake ;
   vcare:hasState vcare:UrgentReferralCKD ;
+  vcare:hasState vcare:UserHasCKDWithDiabetes ;
   vcare:hasState vcare:UserHasCKDWithoutDiabetes ;
-  vcare:hasState vcare:UserHasToTakeMedication ;
+  vcare:hasState vcare:UserHasNoCKD ;
   vcare:hasState vcare:UserTookACEi ;
   vcare:hasState vcare:UserTookARB ;
   vcare:hasState vcare:UserTookAntiplatelet ;
@@ -298,6 +320,7 @@ vcare:CKDPathway
   vcare:requiresActivity vcare:CKDEmergentReferral ;
   vcare:requiresActivity vcare:CKDRoutineReferral ;
   vcare:requiresActivity vcare:CKDUrgentReferral ;
+  vcare:requiresActivity vcare:CheckCKDRisk ;
   vcare:requiresActivity vcare:FastWalking ;
   vcare:requiresActivity vcare:FluidIntakeRegulation ;
   vcare:requiresActivity vcare:HighSeverityHiking ;
@@ -323,35 +346,27 @@ vcare:CKDPathway
   vcare:requiresActivity vcare:TestEGFR ;
   vcare:requiresActivity vcare:Urinanalysis ;
   vcare:requiresActivity vcare:WaterGymnastic ;
+  rdfs:label "CKDPathway" ;
 .
 vcare:CKDPathwayService
   rdf:type vcare:Service ;
   rdfs:label "CKDPathway service" ;
 .
 vcare:CKDRoutineReferral
+  rdf:type vcare:RoutineReferral ;
   vcare:hasPreviousState vcare:RoutineReferralCKD ;
+  rdfs:label "CKDRoutine referral" ;
 .
 vcare:CKDSimulation
+  rdf:type vcare:ClinicalPathwaySimulation ;
   vcare:hasObservationFeature vcare:A1C ;
   vcare:hasObservationFeature vcare:ACR ;
   vcare:hasObservationFeature vcare:BMI ;
-  vcare:hasObservationFeature vcare:BladderCancer ;
-  vcare:hasObservationFeature vcare:CardioVascularDisease ;
-  vcare:hasObservationFeature vcare:DiabetesMellitusType2 ;
   vcare:hasObservationFeature vcare:DiastolicValue ;
-  vcare:hasObservationFeature vcare:FamilyHistoryStage5CKD ;
   vcare:hasObservationFeature vcare:Hematuria ;
-  vcare:hasObservationFeature vcare:HereditaryCKD ;
   vcare:hasObservationFeature vcare:Kalium ;
-  vcare:hasObservationFeature vcare:KidneyStones ;
-  vcare:hasObservationFeature vcare:PVD ;
   vcare:hasObservationFeature vcare:Potassium ;
-  vcare:hasObservationFeature vcare:SLE ;
-  vcare:hasObservationFeature vcare:Stroke ;
   vcare:hasObservationFeature vcare:SystolicValue ;
-  vcare:hasObservationFeature vcare:TIA ;
-  vcare:hasObservationFeature vcare:UrinAnalysis ;
-  vcare:hasObservationFeature vcare:UrinaryTractInfection ;
   vcare:hasObservationFeature vcare:eGFR ;
   vcare:hasSPARQLQuery """PREFIX vcare: <http://vcare.eu/vcare#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -370,23 +385,38 @@ WHERE {
     }
     OPTIONAL {?uc vcare:requiresActivity ?activity.}
 }""" ;
+  vcare:hasSPARQLQuery """PREFIX vcare: <http://vcare.eu/vcare#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT ?state ?reward ?condition ?expr ?feat ?fType ?unit ?vecsize ?activity
+WHERE {
+    vcare:CKDPathway vcare:hasState ?state.
+    ?state vcare:hasReward ?reward.
+    OPTIONAL {?state vcare:hasCondition ?condition.
+        OPTIONAL {?condition vcare:hasConditionExpression ?expr.}
+        ?condition vcare:hasObservationFeature ?feat.
+        ?feat vcare:featureType ?fType.
+        OPTIONAL{?feat vcare:hasUnit ?unit.}
+        OPTIONAL {?feat vcare:hasVectorSize ?vecsize.}
+    }
+    OPTIONAL {?uc vcare:requiresActivity ?activity.}
+}""" ;
   vcare:simulatesUseCase vcare:CKDPathway ;
+  rdfs:label "vcare CKDSimulation" ;
 .
 vcare:CKDUrgentReferral
+  rdf:type vcare:UrgentReferral ;
   vcare:hasPreviousState vcare:UrgentReferralCKD ;
+  rdfs:label "CKDUrgent referral" ;
 .
 vcare:CanlessAlertService
   rdf:type vcare:Service ;
   rdfs:label "Canless alert service" ;
 .
-vcare:CardioVascularDisease
-  vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "CardioVascularDisease: 1" ;
-  vcare:hasObservationFeature vcare:CardioVascularDisease ;
-  vcare:hasVectorSize 1 ;
-.
 vcare:Cardiologist
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Cardiologist" ;
+  rdfs:subClassOf vcare:Physician ;
 .
 vcare:Caregiver
   rdf:type rdfs:Class ;
@@ -395,8 +425,14 @@ vcare:Caregiver
   rdfs:subClassOf vcare:MedicalPerson ;
 .
 vcare:CheckCKDRisk
+  rdf:type vcare:PhysicianActivity ;
   vcare:hasNextState vcare:UserHasCKDRisk ;
   vcare:hasNextState vcare:UserHasNoCKDRisk ;
+  vcare:requiresActivity vcare:RetestACR ;
+  vcare:requiresActivity vcare:RetestEGFR ;
+  vcare:requiresActivity vcare:TestACR ;
+  vcare:requiresActivity vcare:TestEGFR ;
+  rdfs:label "Check CKDRisk" ;
 .
 vcare:Chess
   rdf:type rdfs:Class ;
@@ -405,23 +441,37 @@ vcare:Chess
   rdfs:subClassOf vcare:PlayGame ;
 .
 vcare:ChronicalKidneyDisease
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Chronical kidney disease" ;
+  rdfs:subClassOf vcare:Disease ;
 .
 vcare:ClassicalChess
   rdf:type vcare:Chess ;
   rdfs:label "Classical chess" ;
 .
 vcare:ClinicalPathway
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Clinical pathway" ;
   rdfs:subClassOf vcare:UseCase ;
-.
-vcare:ClinicalPathwaySimulation
   sh:property [
-      sh:path vcare:simulatesUseCase ;
-      sh:class vcare:UseCase ;
-      sh:maxCount 1 ;
+      sh:path vcare:hasState ;
       sh:minCount 1 ;
       sh:nodeKind sh:IRI ;
     ] ;
+  sh:property [
+      sh:path vcare:requiresActivity ;
+      sh:class vcare:Activity ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+.
+vcare:ClinicalPathwaySimulation
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Clinical pathway simulation" ;
+  rdfs:subClassOf vcare:SimulationTask ;
 .
 vcare:Cliostazol
   rdf:type vcare:Antiplatelet ;
@@ -437,6 +487,11 @@ vcare:ComparisonCondition
   rdfs:label "Comparison condition" ;
   rdfs:subClassOf vcare:Condition ;
 .
+vcare:Competency
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Competency" ;
+.
 vcare:Condition
   rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
@@ -445,6 +500,7 @@ vcare:Condition
   sh:property [
       sh:path vcare:hasConditionExpression ;
       sh:datatype xsd:string ;
+      sh:minCount 1 ;
     ] ;
   sh:property [
       sh:path vcare:hasObservationFeature ;
@@ -454,17 +510,62 @@ vcare:Condition
       sh:nodeKind sh:IRI ;
     ] ;
 .
+vcare:ContextSimulation
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Context simulation" ;
+  rdfs:subClassOf vcare:SimulationTask ;
+.
+vcare:ContextState
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Context state" ;
+  rdfs:subClassOf vcare:State ;
+.
 vcare:ControlEnvironmentActivity
   rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
   rdfs:label "Control environment activity" ;
   rdfs:subClassOf vcare:AgentActivity ;
 .
+vcare:Convert
+  rdf:type vcare:Impact ;
+  rdfs:label "Convert" ;
+.
+vcare:ConvertTVState
+  rdf:type vcare:ShorttermEffect ;
+  vcare:hasImpact vcare:Convert ;
+  vcare:hasObservationFeature vcare:TVState ;
+  vcare:hasReward "0"^^xsd:decimal ;
+  vcare:hasRule """CONSTRUCT {vcare:ConvertTVState vcare:hasReward \"-1.0\"^^xsd:double.}
+WHERE {
+?agent vcare:performsActivity ?activity.
+?activity vcare:hasEffect vcare:ConvertTVState.
+?agent vcare:isInState vcare:TVStateOn.
+?agent vcare:isInState vcare:UserInFrontOfTV.
+?agent vcare:isInState vcare:UserWatchingTV.
+}""" ;
+  vcare:hasRule """CONSTRUCT {vcare:ConvertTVState vcare:hasReward \"1.0\"^^xsd:double.}
+WHERE {
+?agent vcare:performsActivity ?activity.
+?activity vcare:hasEffect vcare:ConvertTVState.
+?agent vcare:isInState vcare:TVStateOff.
+?agent vcare:isInState vcare:UserInFrontOffTV.
+}
+""" ;
+  rdfs:label "Convert TVState" ;
+.
 vcare:CoronaryDisease
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Coronary disease" ;
+  rdfs:subClassOf vcare:Disease ;
 .
 vcare:CoronaryDiseasePatient
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Coronary disease patient" ;
+  rdfs:subClassOf vcare:Patient ;
 .
 vcare:Dancing
   rdf:type rdfs:Class ;
@@ -472,46 +573,118 @@ vcare:Dancing
   rdfs:label "Dancing" ;
   rdfs:subClassOf vcare:PhysicalActivity ;
 .
+vcare:Decrease
+  rdf:type vcare:Impact ;
+  rdfs:label "Decrease" ;
+.
+vcare:DecreaseBrightness
+  rdf:type vcare:ShorttermEffect ;
+  vcare:hasImpact vcare:Decrease ;
+  vcare:hasObservationFeature vcare:BrightnessInLUX ;
+  vcare:hasReward "0"^^xsd:decimal ;
+  vcare:hasRule """CONSTRUCT {vcare:DecreaseBrightness vcare:hasReward \"-1.0\"^^xsd:double.}
+WHERE {
+?agent vcare:performsActivity ?activity.
+?activity vcare:hasEffect vcare:DecreaseBrightness.
+{?agent vcare:IsInState vcare:RoomDark.}
+UNION 
+{?agent vcare:IsInState vcare:UserAbsent.}
+UNION
+{?agent vcare:isInState vcare:RoomBright.}}""" ;
+  vcare:hasRule """CONSTRUCT {vcare:DecreaseBrightness vcare:hasReward \"1.0\"^^xsd:double.}
+WHERE {
+?agent vcare:performsActivity ?activity.
+?activity vcare:hasEffect vcare:DecreaseBrightness.
+?agent vcare:IsInState vcare:RoomDark.
+?agent vcare:IsInState vcare:UserPresent.
+}""" ;
+  rdfs:label "Decrease brightness" ;
+.
 vcare:DecreaseHeartrate
   rdf:type vcare:ShorttermEffect ;
+  vcare:hasImpact vcare:Decrease ;
   vcare:hasObservationFeature vcare:HeartRate ;
+  vcare:hasReward "1"^^xsd:decimal ;
   rdfs:label "Decrease heartrate" ;
+.
+vcare:DecreaseRoomTemperature
+  rdf:type vcare:ShorttermEffect ;
+  vcare:hasImpact vcare:Decrease ;
+  vcare:hasObservationFeature vcare:TemperatureInCelsiusDegree ;
+  vcare:hasReward "0"^^xsd:decimal ;
+  vcare:hasRule """CONSTRUCT {vcare:DecreaseRoomTemperature vcare:hasReward \"-1.0\"^^xsd:double.}
+WHERE {
+?agent vcare:performsActivity ?activity.
+?activity vcare:hasEffect vcare:DecreaseRoomTemperature.
+?agent vcare:isInState vcare:RoomTemperatureCOLD. 
+?agent vcare:isInState vcare:UserPresent.
+}""" ;
+  vcare:hasRule """CONSTRUCT {vcare:DecreaseRoomTemperature vcare:hasReward \"1.0\"^^xsd:double.}
+WHERE {
+?agent vcare:performsActivity ?activity.
+?activity vcare:hasEffect vcare:DecreaseRoomTemperature.
+?agent vcare:isInState vcare:RoomTemperatureHot.
+?agent vcare:isInState vcare:UserPresent.
+}""" ;
+  rdfs:label "Decrease room temperature" ;
+.
+vcare:DecreaseTemperature
+  rdf:type vcare:AgentActivity ;
+  vcare:hasEffect vcare:DecreaseRoomTemperature ;
+  rdfs:label "Decrease temperature" ;
 .
 vcare:DecreasingACR
   rdf:type vcare:LongtermEffect ;
+  vcare:hasImpact vcare:Decrease ;
   vcare:hasObservationFeature vcare:ACR ;
+  vcare:hasReward "1"^^xsd:decimal ;
   rdfs:label "Decreasing ACR" ;
 .
 vcare:DecreasingBMI
   rdf:type vcare:LongtermEffect ;
+  vcare:hasImpact vcare:Decrease ;
   vcare:hasObservationFeature vcare:BMI ;
+  vcare:hasReward "1"^^xsd:decimal ;
   rdfs:label "Decreasing BMI" ;
 .
 vcare:DecreasingPotassium
   rdf:type vcare:LongtermEffect ;
+  vcare:hasImpact vcare:Decrease ;
   vcare:hasObservationFeature vcare:Potassium ;
+  vcare:hasReward "1"^^xsd:decimal ;
   rdfs:label "Decreasing potassium" ;
 .
 vcare:DecreasingeGFR
   rdf:type vcare:LongtermEffect ;
+  vcare:hasImpact vcare:Decrease ;
   vcare:hasObservationFeature vcare:eGFR ;
+  vcare:hasReward "-1"^^xsd:decimal ;
   rdfs:label "Decreasinge GFR" ;
 .
 vcare:Dentist
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Dentist" ;
+  rdfs:subClassOf vcare:Physician ;
   owl:equivalentClass <http://schema.org/Dentist> ;
 .
 vcare:DiabetesMellitus
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Diabetes mellitus" ;
+  rdfs:subClassOf vcare:Disease ;
 .
 vcare:DiabetesMellitusPatient
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Diabetes mellitus patient" ;
+  rdfs:subClassOf vcare:Patient ;
 .
-vcare:DiabetesMellitusType2
-  vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "DiabetesMellitusType2: 1" ;
-  vcare:hasObservationFeature vcare:DiabetesMellitusType2 ;
-  vcare:hasVectorSize 1 ;
+vcare:DiagnosisSimulation
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Diagnosis simulation" ;
+  rdfs:subClassOf vcare:SimulationTask ;
 .
 vcare:DiastolicValue
   rdf:type vcare:ObservationFeature ;
@@ -525,11 +698,29 @@ vcare:DietaryRegulation
   rdfs:label "Dietary regulation" ;
   rdfs:subClassOf vcare:BehaviourRegulationActivity ;
 .
+vcare:DimLight
+  rdf:type vcare:AgentActivity ;
+  vcare:hasEffect vcare:DecreaseBrightness ;
+  rdfs:label "Dim light" ;
+.
 vcare:Disease
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Disease" ;
   rdfs:subClassOf vcare:BooleanCondition ;
   rdfs:subClassOf vcare:ObservationFeature ;
 .
+vcare:DistanceToTVInCentimeters
+  rdf:type vcare:ObservationFeature ;
+  vcare:featureType vcare:Numerical ;
+  vcare:hasUnit "cm" ;
+  vcare:hasVectorSize 1 ;
+  rdfs:label "Distance to TVIn centimeters" ;
+.
 vcare:Drug
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Drug" ;
   sh:property [
       sh:path vcare:hasContraIndication ;
       sh:name "has contra indication" ;
@@ -553,12 +744,27 @@ vcare:Drug
     ] ;
 .
 vcare:DrugIntakeActivity
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Drug intake activity" ;
+  rdfs:subClassOf vcare:RegulativeActivity ;
+.
+vcare:EGFRTest
+  rdf:type vcare:MedicalTest ;
+  rdfs:label "EGFRTest" ;
 .
 vcare:Effect
   rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
   rdfs:label "Effect" ;
+  sh:property [
+      sh:path vcare:hasImpact ;
+      sh:class vcare:Impact ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "has impact" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
   sh:property [
       sh:path vcare:hasObservationFeature ;
       sh:class vcare:ObservationFeature ;
@@ -566,30 +772,47 @@ vcare:Effect
       sh:name "has observation feature" ;
       sh:nodeKind sh:IRI ;
     ] ;
+  sh:property [
+      sh:path vcare:hasReward ;
+      sh:datatype xsd:decimal ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+    ] ;
+  sh:property [
+      sh:path vcare:hasRule ;
+      sh:datatype xsd:string ;
+      sh:minCount 1 ;
+    ] ;
 .
 vcare:EmergentReferral
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Emergent referral" ;
+  rdfs:subClassOf vcare:Referral ;
 .
 vcare:EmergentReferralCKD
   rdf:type vcare:HealthState ;
+  vcare:hasCondition vcare:AnormalPotassium ;
   vcare:hasCondition vcare:Hyperkalemia ;
   vcare:hasCondition vcare:eGFRLower10 ;
-  vcare:hasReward 0 ;
+  vcare:hasReward -1 ;
   vcare:hasRisk vcare:KidneyFailure ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:CKDEmergentReferral ;
   rdfs:label "Emergent referral CKD" ;
 .
 vcare:EqualWeight
+  rdf:type vcare:ContextState ;
   vcare:hasNextState vcare:EqualWeight ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "Equal weight" ;
 .
 vcare:Event
   rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
   rdfs:label "Event" ;
   rdfs:subClassOf rdfs:Resource ;
-  owl:equivalentClass <http://schema.org/Event> ;
 .
 vcare:Ezetmibe
   rdf:type vcare:Statin ;
@@ -601,15 +824,6 @@ vcare:FallingRisk
   vcare:hasReward -1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
   rdfs:label "vcare falling risk" ;
-.
-vcare:FamilyHistoryStage5CKD
-  rdf:type vcare:BooleanCondition ;
-  rdf:type vcare:ObservationFeature ;
-  vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "FamilyHistoryStage5CKD: 1" ;
-  vcare:hasObservationFeature vcare:FamilyHistoryStage5CKD ;
-  vcare:hasVectorSize 1 ;
-  rdfs:label "Family history stage5CKD" ;
 .
 vcare:FastWalking
   rdf:type vcare:Walking ;
@@ -628,6 +842,11 @@ vcare:FeatureType
       sh:minCount 1 ;
     ] ;
 .
+vcare:Female
+  rdf:type vcare:Gender ;
+  vcare:hasLabel "Female" ;
+  rdfs:label "Female" ;
+.
 vcare:FluidIntakeRegulation
   rdf:type vcare:DietaryRegulation ;
   vcare:hasEffect vcare:DecreasingACR ;
@@ -641,6 +860,9 @@ vcare:Fluvastatin
   rdfs:label "Fluvastatin" ;
 .
 vcare:Game
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Game" ;
   sh:property [
       sh:path vcare:hasEffect ;
       sh:class vcare:Effect ;
@@ -648,14 +870,30 @@ vcare:Game
     ] ;
 .
 vcare:Gender
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Gender" ;
   sh:hasValue vcare:Female ;
   sh:hasValue vcare:Male ;
+  sh:property [
+      sh:path vcare:hasLabel ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:Literal ;
+    ] ;
 .
 vcare:GiveAccousticFeedback
   rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
   rdfs:label "Give accoustic feedback" ;
   rdfs:subClassOf vcare:AgentActivity ;
+.
+vcare:HealthState
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Symptom" ;
+  rdfs:subClassOf vcare:State ;
 .
 vcare:HeartRate
   rdf:type vcare:ObservationFeature ;
@@ -670,17 +908,14 @@ vcare:Hematuria
   vcare:featureType vcare:Nominal ;
   vcare:hasConditionExpression "Hematuria: 1" ;
   vcare:hasObservationFeature vcare:Hematuria ;
+  vcare:hasReward -1 ;
   vcare:hasVectorSize 1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "Hematuria" ;
 .
-vcare:HereditaryCKD
-  rdf:type vcare:BooleanCondition ;
-  rdf:type vcare:Disease ;
-  vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "HereditaryCKD: 1" ;
-  vcare:hasObservationFeature vcare:HereditaryCKD ;
-  vcare:hasVectorSize 1 ;
-  rdfs:label "Hereditary CKD" ;
+vcare:High
+  rdf:type vcare:Priority ;
+  rdfs:label "High" ;
 .
 vcare:HighSeverityHiking
   rdf:type vcare:Hiking ;
@@ -707,15 +942,75 @@ vcare:Hypertension
   vcare:hasConditionExpression "SystolicValue: 140 - 190" ;
   vcare:hasObservationFeature vcare:DiastolicValue ;
   vcare:hasObservationFeature vcare:SystolicValue ;
+  vcare:hasReward -1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "Hypertension" ;
 .
 vcare:Hypotension
   rdf:type vcare:RangeCondition ;
-  vcare:hasConditionExpression "DiastolicValue: 40 - 60 " ;
-  vcare:hasConditionExpression "SystolicValue: 70 - 90" ;
+  vcare:hasConditionExpression " SystolicValue: 70 - 90" ;
+  vcare:hasConditionExpression "DiastolicValue: 40 - 60  " ;
   vcare:hasObservationFeature vcare:DiastolicValue ;
   vcare:hasObservationFeature vcare:SystolicValue ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "Hypotension" ;
+.
+vcare:Impact
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Impact" ;
+  rdfs:subClassOf rdfs:Resource ;
+.
+vcare:Increase
+  rdf:type vcare:Impact ;
+  rdfs:label "Increase" ;
+.
+vcare:IncreaseBrightness
+  rdf:type vcare:ShorttermEffect ;
+  vcare:hasImpact vcare:Increase ;
+  vcare:hasObservationFeature vcare:BrightnessInLUX ;
+  vcare:hasReward "0"^^xsd:decimal ;
+  vcare:hasRule """CONSTRUCT {vcare:IncreaseBrightness vcare:hasReward \"-1.0\"^^xsd:double.}
+WHERE {
+?agent vcare:performsActivity ?activity.
+?activity vcare:hasEffect vcare:IncreaseBrightness.
+{?agent vcare:isInState vcare:RoomBright.} UNION {?agent vcare:isInState vcare:RoomDark.}
+?agent vcare:isInState vcare:UserPresent.
+}""" ;
+  vcare:hasRule """CONSTRUCT {vcare:IncreaseBrightness vcare:hasReward \"1.0\"^^xsd:double.}
+WHERE {
+?agent vcare:performsActivity ?activity.
+?activity vcare:hasEffect vcare:IncreaseBrightness.
+?agent vcare:isInState vcare:RoomDark.
+?agent vcare:isInState vcare:UserPresent.
+}""" ;
+  rdfs:label "Increase brightness" ;
+.
+vcare:IncreaseRoomTemperature
+  rdf:type vcare:ShorttermEffect ;
+  vcare:hasImpact vcare:Increase ;
+  vcare:hasObservationFeature vcare:TemperatureInCelsiusDegree ;
+  vcare:hasReward "0"^^xsd:decimal ;
+  vcare:hasRule """CONSTRUCT {vcare:IncreaseRoomTemperature vcare:hasReward \"-1.0\"^^xsd:double.}
+WHERE {
+?agent vcare:performsActivity ?activity.
+?activity vcare:hasEffect vcare:IncreaseRoomTemperature.
+{?agent vcare:isInState vcare:RoomTemperatureHot.} UNION {?agent vcare:isInState vcare:RoomTemperatureWarm.}
+?agent vcare:isInState vcare:UserAbsent.
+}""" ;
+  vcare:hasRule """CONSTRUCT {vcare:IncreaseRoomTemperature vcare:hasReward \"1.0\"^^xsd:double.}
+WHERE {
+?agent vcare:performsActivity ?activity.
+?activity vcare:hasEffect vcare:IncreaseRoomTemperature.
+?agent vcare:isInState vcare:RoomTemperatureCold.
+?agent vcare:isInState vcare:UserPresent.
+}""" ;
+  rdfs:label "Increase room temperature" ;
+.
+vcare:IncreaseTemperature
+  rdf:type vcare:AgentActivity ;
+  vcare:hasEffect vcare:IncreaseRoomTemperature ;
+  rdfs:label "Increase temperature" ;
 .
 vcare:IncreasedFruitVegetableConsumption
   rdf:type vcare:DietaryRegulation ;
@@ -729,40 +1024,80 @@ vcare:IncreasedFruitVegetableConsumption
 .
 vcare:IncreasingACR
   rdf:type vcare:LongtermEffect ;
+  vcare:hasImpact vcare:Increase ;
   vcare:hasObservationFeature vcare:ACR ;
+  vcare:hasReward "-1"^^xsd:decimal ;
   rdfs:label "Increasing ACR" ;
 .
 vcare:IncreasingBMI
   rdf:type vcare:LongtermEffect ;
+  vcare:hasImpact vcare:Increase ;
   vcare:hasObservationFeature vcare:BMI ;
+  vcare:hasReward "-1"^^xsd:decimal ;
   rdfs:label "Increasing BMI" ;
 .
 vcare:IncreasingBloodpressure
   rdf:type vcare:ShorttermEffect ;
+  vcare:hasImpact vcare:Increase ;
   vcare:hasObservationFeature vcare:DiastolicValue ;
   vcare:hasObservationFeature vcare:SystolicValue ;
+  vcare:hasReward "-1"^^xsd:decimal ;
   rdfs:label "Increasing bloodpressure" ;
 .
 vcare:IncreasingHeartrate
+  rdf:type vcare:ShorttermEffect ;
+  vcare:hasImpact vcare:Increase ;
   vcare:hasObservationFeature vcare:HeartRate ;
+  vcare:hasReward "0"^^xsd:decimal ;
+  rdfs:label "Increasing heartrate" ;
 .
 vcare:IncreasingPotassium
   rdf:type vcare:LongtermEffect ;
+  vcare:hasImpact vcare:Increase ;
   vcare:hasObservationFeature vcare:Potassium ;
+  vcare:hasReward "-1"^^xsd:decimal ;
   rdfs:label "Increasing potassium" ;
 .
 vcare:IncreasingWeight
   rdf:type vcare:LongtermEffect ;
+  vcare:hasImpact vcare:Increase ;
   vcare:hasObservationFeature vcare:Weight ;
+  vcare:hasReward "-1"^^xsd:decimal ;
   rdfs:label "Increasing weight" ;
 .
 vcare:IncreasingeGFR
   rdf:type vcare:LongtermEffect ;
+  vcare:hasImpact vcare:Increase ;
   vcare:hasObservationFeature vcare:eGFR ;
+  vcare:hasReward "1"^^xsd:decimal ;
   rdfs:label "Increasinge GFR" ;
 .
+vcare:IntelligentSmartHomeControl
+  rdf:type vcare:UseCase ;
+  vcare:hasState vcare:RoomBrightnessBright ;
+  vcare:hasState vcare:RoomBrightnessDark ;
+  vcare:hasState vcare:RoomTemperatureCold ;
+  vcare:hasState vcare:RoomTemperatureHot ;
+  vcare:hasState vcare:RoomTemperatureWarm ;
+  vcare:hasState vcare:TVOff ;
+  vcare:hasState vcare:TVOn ;
+  vcare:hasState vcare:UserInFrontOfTV ;
+  vcare:hasState vcare:UserNotInFrontOfTV ;
+  vcare:hasState vcare:UserWatchingTV ;
+  vcare:requiresActivity vcare:DecreaseTemperature ;
+  vcare:requiresActivity vcare:DimLight ;
+  vcare:requiresActivity vcare:IncreaseTemperature ;
+  vcare:requiresActivity vcare:TurnTVOff ;
+  vcare:requiresActivity vcare:TurnTVOn ;
+  vcare:requiresActivity vcare:TurningLightOff ;
+  vcare:requiresActivity vcare:TurningLightOn ;
+  rdfs:label "Intelligent smart home control" ;
+.
 vcare:InteractionActivity
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Interaction activity" ;
+  rdfs:subClassOf vcare:Activity ;
 .
 vcare:JazzDance
   rdf:type vcare:Dancing ;
@@ -782,16 +1117,19 @@ vcare:Kalium
 .
 vcare:KidneyFailure
   rdf:type vcare:Risk ;
+  vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:CKDEmergentReferral ;
+  vcare:requiresActivity vcare:CKDUrgentReferral ;
+  vcare:requiresActivity vcare:FluidIntakeRegulation ;
+  vcare:requiresActivity vcare:LowPotassiumDiet ;
+  vcare:requiresActivity vcare:LowSodiumDiet ;
   rdfs:label "Kidney failure" ;
 .
-vcare:KidneyStones
-  vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "KidneyStones: 1" ;
-  vcare:hasObservationFeature vcare:KidneyStones ;
-  vcare:hasVectorSize 1 ;
-.
 vcare:LeisureActivity
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Leisure activity" ;
+  rdfs:subClassOf vcare:Activity ;
 .
 vcare:ListenToMusic
   rdf:type rdfs:Class ;
@@ -809,6 +1147,10 @@ vcare:Lovastatin
   rdf:type vcare:Statin ;
   vcare:hasDosage "not studied" ;
   rdfs:label "Lovastatin" ;
+.
+vcare:Low
+  rdf:type vcare:Priority ;
+  rdfs:label "Low" ;
 .
 vcare:LowPotassiumDiet
   rdf:type vcare:BehaviourRegulationActivity ;
@@ -831,11 +1173,24 @@ vcare:LowSodiumDiet
   rdfs:label "Low sodium diet" ;
 .
 vcare:LowerBloodpressure
+  rdf:type vcare:LongtermEffect ;
+  vcare:hasImpact vcare:Decrease ;
   vcare:hasObservationFeature vcare:DiastolicValue ;
   vcare:hasObservationFeature vcare:SystolicValue ;
+  vcare:hasReward "1"^^xsd:decimal ;
+  rdfs:label "Lower bloodpressure" ;
 .
 vcare:LowerWeight
+  rdf:type vcare:LongtermEffect ;
+  vcare:hasImpact vcare:Decrease ;
   vcare:hasObservationFeature vcare:Weight ;
+  vcare:hasReward "1"^^xsd:decimal ;
+  rdfs:label "Lower weight" ;
+.
+vcare:Male
+  rdf:type vcare:Gender ;
+  vcare:hasLabel "Male" ;
+  rdfs:label "Male" ;
 .
 vcare:MarkAnxietyTranquillityLevel
   rdf:type rdfs:Class ;
@@ -844,7 +1199,10 @@ vcare:MarkAnxietyTranquillityLevel
   rdfs:subClassOf vcare:InteractionActivity ;
 .
 vcare:MedicalGame
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Medical game" ;
+  rdfs:subClassOf vcare:Game ;
 .
 vcare:MedicalGameActivity
   rdf:type rdfs:Class ;
@@ -853,12 +1211,20 @@ vcare:MedicalGameActivity
   rdfs:subClassOf vcare:Activity ;
 .
 vcare:MedicalPerson
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Medical person" ;
   sh:property [
       sh:path vcare:hasCompetency ;
       sh:class vcare:Competency ;
       sh:minCount 1 ;
       sh:nodeKind sh:IRI ;
     ] ;
+.
+vcare:MedicalTest
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Campaign" ;
 .
 vcare:MediumSeverityHiking
   rdf:type vcare:Hiking ;
@@ -876,6 +1242,10 @@ vcare:MediumWalking
   vcare:hasEffect vcare:LowerWeight ;
   rdfs:label "Medium walking" ;
 .
+vcare:Middle
+  rdf:type vcare:Priority ;
+  rdfs:label "Middle" ;
+.
 vcare:MountainBiking
   rdf:type vcare:Biking ;
   vcare:hasDuration "90"^^xsd:decimal ;
@@ -886,16 +1256,28 @@ vcare:MountainBiking
   rdfs:label "Mountain biking" ;
 .
 vcare:MultisystemDisease
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Multisystem disease" ;
+  rdfs:subClassOf vcare:Disease ;
 .
 vcare:MultisystemDiseasePatient
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Multisystem disease patient" ;
+  rdfs:subClassOf vcare:Patient ;
 .
 vcare:Nephrologist
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Nephrologist" ;
+  rdfs:subClassOf vcare:Physician ;
 .
 vcare:Neuroligist
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Neuroligist" ;
+  rdfs:subClassOf vcare:Physician ;
 .
 vcare:NoHematuria
   rdf:type vcare:BooleanCondition ;
@@ -906,13 +1288,11 @@ vcare:NoHematuria
 vcare:NoPVD
   rdf:type vcare:BooleanCondition ;
   vcare:hasConditionExpression "PVD: 0" ;
-  vcare:hasObservationFeature vcare:PVD ;
   rdfs:label "No PVD" ;
 .
 vcare:NoSLE
   rdf:type vcare:Condition ;
   vcare:hasConditionExpression "SLE: 0" ;
-  vcare:hasObservationFeature vcare:SLE ;
   rdfs:label "No SLE" ;
 .
 vcare:NoSmoker
@@ -924,19 +1304,16 @@ vcare:NoSmoker
 vcare:NoStroke
   rdf:type vcare:Condition ;
   vcare:hasConditionExpression "Stroke: 0" ;
-  vcare:hasObservationFeature vcare:Stroke ;
   rdfs:label "No stroke" ;
 .
 vcare:NoTIA
   rdf:type vcare:Condition ;
   vcare:hasConditionExpression "TIA: 0" ;
-  vcare:hasObservationFeature vcare:TIA ;
   rdfs:label "No TIA" ;
 .
 vcare:NoUrinaryTractInfection
   rdf:type vcare:BooleanCondition ;
   vcare:hasConditionExpression "UrinaryTractInfection: 0" ;
-  vcare:hasObservationFeature vcare:UrinaryTractInfection ;
   rdfs:label "No urinary tract infection" ;
 .
 vcare:Nominal
@@ -956,6 +1333,7 @@ vcare:NormalACR
   vcare:hasConditionExpression "ACR: < 3" ;
   vcare:hasObservationFeature vcare:ACR ;
   vcare:isTargetState "true"^^xsd:boolean ;
+  rdfs:label "Normal ACR" ;
 .
 vcare:NormalBMI
   rdf:type vcare:RangeCondition ;
@@ -978,6 +1356,7 @@ eGFR may be unreliable in certain situations including:
 * acute changes in kidney function; extremes in body size; diseases affecting skeletal muscle; paraplegia, amputees or high muscle mass; severe liver disease; drugs interacting with creatinine excretion (Trimethoprim, Fenofibrate).""" ;
   vcare:hasObservationFeature vcare:eGFR ;
   vcare:isTargetState "true"^^xsd:boolean ;
+  rdfs:label "Normal EGFR" ;
 .
 vcare:NormalPotassium
   rdf:type vcare:RangeCondition ;
@@ -1008,6 +1387,11 @@ vcare:ObservationFeature
       sh:maxCount 1 ;
     ] ;
   sh:property [
+      sh:path vcare:hasValue ;
+      sh:datatype xsd:decimal ;
+      sh:maxCount 1 ;
+    ] ;
+  sh:property [
       sh:path vcare:hasVectorSize ;
       sh:datatype xsd:integer ;
       sh:maxCount 1 ;
@@ -1023,14 +1407,10 @@ vcare:Ordinal
   vcare:hasName "Ordinal" ;
   rdfs:label "Ordinal" ;
 .
-vcare:PVD
-  vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "PVD: 1" ;
-  vcare:hasObservationFeature vcare:PVD ;
-  vcare:hasVectorSize 1 ;
-.
 vcare:Patient
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Patient" ;
   rdfs:subClassOf rdfs:Resource ;
   sh:property [
       sh:path vcare:hasDisease ;
@@ -1068,17 +1448,29 @@ vcare:Patient
     ] ;
 .
 vcare:PhysicalActivity
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Physical activity" ;
+  rdfs:subClassOf vcare:Activity ;
 .
 vcare:Physichiatrist
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Physichiatrist" ;
+  rdfs:subClassOf vcare:Physician ;
 .
 vcare:Physician
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Physician" ;
+  rdfs:subClassOf vcare:MedicalPerson ;
   owl:equivalentClass <http://schema.org/Physician> ;
 .
 vcare:PhysicianActivity
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Physician activity" ;
+  rdfs:subClassOf vcare:Activity ;
 .
 vcare:Physiotherapist
   rdf:type rdfs:Class ;
@@ -1161,6 +1553,9 @@ vcare:Pregnancy
   rdfs:label "Pregnancy" ;
 .
 vcare:Priority
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Priority" ;
   sh:hasValue vcare:High ;
   sh:hasValue vcare:Low ;
   sh:hasValue vcare:Middle ;
@@ -1176,6 +1571,11 @@ vcare:ProposePhysicalActivity
   rdf:type sh:NodeShape ;
   rdfs:label "Propose physical activity" ;
   rdfs:subClassOf vcare:AgentActivity ;
+.
+vcare:RL_Agent
+  rdf:type vcare:Agent ;
+  vcare:hasName "Reinforce_Agent" ;
+  rdfs:label "RL Agent" ;
 .
 vcare:RangeCondition
   rdf:type rdfs:Class ;
@@ -1197,10 +1597,16 @@ vcare:ReducedSaltConsumption
   rdfs:label "Reduced salt consumption" ;
 .
 vcare:Referral
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Referral" ;
+  rdfs:subClassOf vcare:Activity ;
 .
 vcare:RegulativeActivity
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Regulative activity" ;
+  rdfs:subClassOf vcare:Activity ;
 .
 vcare:RemindActivity
   rdf:type rdfs:Class ;
@@ -1242,6 +1648,14 @@ vcare:RemindWetSurface
   rdf:type vcare:RemindActivity ;
   rdfs:label "Remind wet surface" ;
 .
+vcare:RetestACR
+  rdf:type vcare:PhysicianActivity ;
+  rdfs:label "Retest ACR" ;
+.
+vcare:RetestEGFR
+  rdf:type vcare:PhysicianActivity ;
+  rdfs:label "Retest EGFR" ;
+.
 vcare:RetestedACR
   rdf:type vcare:BooleanCondition ;
   vcare:hasCondition vcare:AnormalACR ;
@@ -1256,6 +1670,7 @@ vcare:RetestedACR
   vcare:hasObservationFeature vcare:ACR ;
   vcare:hasReward 1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "Physician retested ACR" ;
 .
 vcare:RetestedEGFR
   rdf:type vcare:BooleanCondition ;
@@ -1271,6 +1686,89 @@ vcare:RetestedEGFR
   vcare:hasObservationFeature vcare:eGFR ;
   vcare:hasReward 1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "Physician retested EGFR" ;
+.
+vcare:Risk
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Risk" ;
+  rdfs:subClassOf vcare:State ;
+.
+vcare:RiskSimulation
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Risk simulation" ;
+  rdfs:subClassOf vcare:SimulationTask ;
+.
+vcare:RoomBright
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "BrightnessInLUX: 500 - 1000" ;
+  vcare:hasObservationFeature vcare:BrightnessInLUX ;
+  rdfs:label "Room bright" ;
+.
+vcare:RoomBrightnessBright
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:RoomBright ;
+  vcare:hasReward 1 ;
+  vcare:isTargetState "true"^^xsd:boolean ;
+  vcare:requiresActivity vcare:TurningLightOff ;
+  rdfs:label "Room brightness bright" ;
+.
+vcare:RoomBrightnessDark
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:RoomDark ;
+  vcare:hasReward 0 ;
+  vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:TurningLightOn ;
+  rdfs:label "Room brightness dark" ;
+.
+vcare:RoomCold
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "TemperatureInCelsiusDegree: < 20" ;
+  vcare:hasObservationFeature vcare:TemperatureInCelsiusDegree ;
+  rdfs:label "Room cold" ;
+.
+vcare:RoomDark
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "BrightnessInLUX: < 100" ;
+  vcare:hasObservationFeature vcare:BrightnessInLUX ;
+  rdfs:label "Room dark" ;
+.
+vcare:RoomHot
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "TemperatureInCelsiusDegree: > 25" ;
+  vcare:hasObservationFeature vcare:TemperatureInCelsiusDegree ;
+  rdfs:label "Room hot" ;
+.
+vcare:RoomTemperatureCold
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:RoomCold ;
+  vcare:hasReward 0 ;
+  vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:IncreaseTemperature ;
+  rdfs:label "Room temperature cold" ;
+.
+vcare:RoomTemperatureHot
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:RoomHot ;
+  vcare:hasReward 0 ;
+  vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:DecreaseTemperature ;
+  rdfs:label "Room temperature hot" ;
+.
+vcare:RoomTemperatureWarm
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:RoomWarm ;
+  vcare:hasReward 0 ;
+  vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:DecreaseTemperature ;
+  rdfs:label "Room temperature warm" ;
+.
+vcare:RoomWarm
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "TemperatureInCelsiusDegree: >= 20" ;
+  vcare:hasObservationFeature vcare:TemperatureInCelsiusDegree ;
+  rdfs:label "Room warm" ;
 .
 vcare:Rosuvastatin
   rdf:type vcare:Statin ;
@@ -1278,22 +1776,21 @@ vcare:Rosuvastatin
   rdfs:label "Rosuvastatin" ;
 .
 vcare:RoutineReferral
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Routine referral" ;
+  rdfs:subClassOf vcare:Referral ;
 .
 vcare:RoutineReferralCKD
   rdf:type vcare:HealthState ;
   vcare:hasCondition vcare:ACRGreater60 ;
   vcare:hasCondition vcare:Hematuria ;
+  vcare:hasCondition vcare:NormalPotassium ;
   vcare:hasCondition vcare:eGFRLower30 ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:CKDRoutineReferral ;
   rdfs:label "Routine referral CKD" ;
-.
-vcare:SLE
-  vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "SLE: 1" ;
-  vcare:hasObservationFeature vcare:SLE ;
-  vcare:hasVectorSize 1 ;
 .
 vcare:Salsa
   rdf:type vcare:Dancing ;
@@ -1341,6 +1838,10 @@ vcare:Simavastatin
   rdfs:label "Simavastatin" ;
 .
 vcare:SimulationTask
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Simulation query" ;
+  rdfs:subClassOf vcare:Service ;
   sh:property [
       sh:path vcare:hasObservationFeature ;
       sh:class vcare:ObservationFeature ;
@@ -1349,12 +1850,16 @@ vcare:SimulationTask
       sh:nodeKind sh:IRI ;
     ] ;
   sh:property [
+      sh:path vcare:hasSPARQLQuery ;
+      sh:datatype xsd:string ;
+      sh:name "has SPARQLQuery" ;
+    ] ;
+  sh:property [
       sh:path vcare:simulatesUseCase ;
       sh:class vcare:UseCase ;
       sh:minCount 1 ;
       sh:nodeKind sh:IRI ;
     ] ;
-  sh:sparql vcare:ActivitySize ;
 .
 vcare:SlipRisk
   rdf:type vcare:Risk ;
@@ -1370,6 +1875,20 @@ vcare:SlowWalking
   vcare:hasEffect vcare:IncreasingHeartrate ;
   vcare:hasEffect vcare:LowerWeight ;
   rdfs:label "Slow walking" ;
+.
+vcare:SmarthomeControl
+  rdf:type vcare:SimulationTask ;
+  vcare:hasObservationFeature vcare:BrightnessInLUX ;
+  vcare:hasObservationFeature vcare:DistanceToTVInCentimeters ;
+  vcare:hasObservationFeature vcare:TVState ;
+  vcare:hasObservationFeature vcare:TemperatureInCelsiusDegree ;
+  vcare:hasObservationFeature vcare:UserLocatedBath ;
+  vcare:hasObservationFeature vcare:UserLocatedBedRoom ;
+  vcare:hasObservationFeature vcare:UserLocatedCorridor ;
+  vcare:hasObservationFeature vcare:UserLocatedKitchen ;
+  vcare:hasObservationFeature vcare:UserLocatedLivingRoom ;
+  vcare:simulatesUseCase vcare:IntelligentSmartHomeControl ;
+  rdfs:label "Smarthome control" ;
 .
 vcare:Smoker
   rdf:type vcare:BooleanCondition ;
@@ -1403,6 +1922,9 @@ vcare:StandardDance
   rdfs:label "Standard dance" ;
 .
 vcare:State
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "State" ;
   rdfs:subClassOf rdfs:Resource ;
   sh:property [
       sh:path vcare:hasCondition ;
@@ -1412,6 +1934,17 @@ vcare:State
   sh:property [
       sh:path vcare:hasInteractionText ;
       sh:datatype xsd:string ;
+    ] ;
+  sh:property [
+      sh:path vcare:hasNextState ;
+      sh:minCount 0 ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path vcare:hasReward ;
+      sh:datatype xsd:integer ;
+      sh:maxCount 1 ;
+      sh:nodeKind sh:Literal ;
     ] ;
   sh:property [
       sh:path vcare:hasRisk ;
@@ -1424,9 +1957,16 @@ vcare:State
       sh:maxCount 1 ;
       sh:minCount 1 ;
     ] ;
+  sh:property [
+      sh:path vcare:requiresActivity ;
+      sh:nodeKind sh:IRI ;
+    ] ;
 .
 vcare:Statin
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Statin" ;
+  rdfs:subClassOf vcare:Drug ;
 .
 vcare:StatinIntake
   rdf:type rdfs:Class ;
@@ -1446,17 +1986,17 @@ vcare:StatinIntakeWithoutDiabetes
   vcare:hasEffect vcare:IncreasingeGFR ;
   rdfs:label "Statin intake without diabetes" ;
 .
-vcare:Stroke
-  vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "Stroke: 1" ;
-  vcare:hasObservationFeature vcare:Stroke ;
-  vcare:hasVectorSize 1 ;
-.
 vcare:Swimming
   rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
   rdfs:label "Swimming" ;
   rdfs:subClassOf vcare:PhysicalActivity ;
+.
+vcare:SymptomSimulation
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Symptom simulation" ;
+  rdfs:subClassOf vcare:SimulationTask ;
 .
 vcare:SystolicValue
   rdf:type vcare:ObservationFeature ;
@@ -1464,11 +2004,39 @@ vcare:SystolicValue
   vcare:hasVectorSize 1 ;
   rdfs:label "Systolic value" ;
 .
-vcare:TIA
+vcare:TVOff
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:TVStateOff ;
+  vcare:hasReward 0 ;
+  vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:TurnTVOn ;
+  rdfs:label "TVOff" ;
+.
+vcare:TVOn
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:TVStateOn ;
+  vcare:hasReward 0 ;
+  vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:TurnTVOff ;
+  rdfs:label "TVOn" ;
+.
+vcare:TVState
+  rdf:type vcare:ObservationFeature ;
   vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "TIA: 1" ;
-  vcare:hasObservationFeature vcare:TIA ;
   vcare:hasVectorSize 1 ;
+  rdfs:label "TVState" ;
+.
+vcare:TVStateOff
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "TVState: 0" ;
+  vcare:hasObservationFeature vcare:TVState ;
+  rdfs:label "TVState off" ;
+.
+vcare:TVStateOn
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "TVState: 1" ;
+  vcare:hasObservationFeature vcare:TVState ;
+  rdfs:label "TVState on" ;
 .
 vcare:Tango
   rdf:type vcare:Dancing ;
@@ -1480,35 +2048,127 @@ vcare:Tango
   rdfs:label "Tango" ;
 .
 vcare:TargetA1C
-  vcare:hasCondition vcare:DiabetesMellitusType2 ;
+  rdf:type vcare:TargetState ;
   vcare:hasCondition vcare:NormalA1C ;
   vcare:hasNextState vcare:TargetA1C ;
+  vcare:hasReward 1 ;
   vcare:isTargetState "true"^^xsd:boolean ;
+  vcare:requiresActivity vcare:ACEiIntakeWithDiabetes ;
+  vcare:requiresActivity vcare:ACEiIntakeWithoutDiabetes ;
+  vcare:requiresActivity vcare:ARBIntakeWithDiabetes ;
+  vcare:requiresActivity vcare:ARBIntakeWithoutDiabetes ;
+  vcare:requiresActivity vcare:AntiplateletIntakeWithDiabetes ;
+  vcare:requiresActivity vcare:AntiplateletIntakeWithoutDiabetes ;
+  vcare:requiresActivity vcare:BMIControl ;
+  vcare:requiresActivity vcare:CheckCKDRisk ;
+  vcare:requiresActivity vcare:FluidIntakeRegulation ;
+  vcare:requiresActivity vcare:IncreasedFruitVegetableConsumption ;
+  vcare:requiresActivity vcare:LowPotassiumDiet ;
+  vcare:requiresActivity vcare:LowSodiumDiet ;
+  vcare:requiresActivity vcare:ReducedSaltConsumption ;
+  vcare:requiresActivity vcare:StatinIntakeWithDiabetes ;
+  vcare:requiresActivity vcare:StatinIntakeWithoutDiabetes ;
+  rdfs:label "A1CTarget" ;
 .
 vcare:TargetBMI
+  rdf:type vcare:TargetState ;
   vcare:hasCondition vcare:NormalBMI ;
   vcare:hasNextState vcare:TargetBMI ;
+  vcare:hasReward 1 ;
   vcare:isTargetState "true"^^xsd:boolean ;
+  vcare:requiresActivity vcare:AlcoholCessation ;
+  vcare:requiresActivity vcare:BMIControl ;
+  vcare:requiresActivity vcare:FastWalking ;
+  vcare:requiresActivity vcare:HighSeverityHiking ;
+  vcare:requiresActivity vcare:IncreasedFruitVegetableConsumption ;
+  vcare:requiresActivity vcare:JazzDance ;
+  vcare:requiresActivity vcare:LowSeverityHiking ;
+  vcare:requiresActivity vcare:MediumSeverityHiking ;
+  vcare:requiresActivity vcare:MediumWalking ;
+  vcare:requiresActivity vcare:MountainBiking ;
+  vcare:requiresActivity vcare:Salsa ;
+  vcare:requiresActivity vcare:SlowWalking ;
+  vcare:requiresActivity vcare:SquareDance ;
+  vcare:requiresActivity vcare:StandardDance ;
+  vcare:requiresActivity vcare:Tango ;
+  vcare:requiresActivity vcare:WaterGymnastic ;
+  rdfs:label "Target BMI" ;
 .
 vcare:TargetBloodpressure
+  rdf:type vcare:TargetState ;
   vcare:hasCondition vcare:UserHasIdealBloodpressure ;
   vcare:hasNextState vcare:TargetBloodpressure ;
+  vcare:hasReward 1 ;
   vcare:isTargetState "true"^^xsd:boolean ;
+  vcare:requiresActivity vcare:FastWalking ;
+  vcare:requiresActivity vcare:HighSeverityHiking ;
+  vcare:requiresActivity vcare:JazzDance ;
+  vcare:requiresActivity vcare:LowSeverityHiking ;
+  vcare:requiresActivity vcare:MediumSeverityHiking ;
+  vcare:requiresActivity vcare:MediumWalking ;
+  vcare:requiresActivity vcare:MountainBiking ;
+  vcare:requiresActivity vcare:ReducedSaltConsumption ;
+  vcare:requiresActivity vcare:Salsa ;
+  vcare:requiresActivity vcare:SlowWalking ;
+  vcare:requiresActivity vcare:SmokingCessation ;
+  vcare:requiresActivity vcare:SquareDance ;
+  vcare:requiresActivity vcare:StandardDance ;
+  vcare:requiresActivity vcare:Tango ;
+  vcare:requiresActivity vcare:WaterGymnastic ;
+  rdfs:label "Target bloodpressure" ;
 .
 vcare:TargetBodyTemperature
+  rdf:type vcare:TargetState ;
   vcare:hasCondition vcare:NormalBodyTemperature ;
   vcare:hasNextState vcare:TargetBodyTemperature ;
+  vcare:hasReward 1 ;
   vcare:isTargetState "true"^^xsd:boolean ;
+  rdfs:label "Target body temperature" ;
 .
 vcare:TargetFluidIntake
+  rdf:type vcare:TargetState ;
   vcare:hasNextState vcare:TargetFluidIntake ;
+  vcare:hasReward 1 ;
   vcare:isTargetState "true"^^xsd:boolean ;
+  vcare:requiresActivity vcare:FluidIntakeRegulation ;
+  rdfs:label "Target fluid intake" ;
 .
 vcare:TargetHeartRate
+  rdf:type vcare:TargetState ;
+  vcare:hasReward 1 ;
   vcare:isTargetState "true"^^xsd:boolean ;
+  rdfs:label "Target heart rate" ;
 .
 vcare:TargetSPO2
+  rdf:type vcare:TargetState ;
+  vcare:hasReward 1 ;
   vcare:isTargetState "true"^^xsd:boolean ;
+  rdfs:label "Target SPO2" ;
+.
+vcare:TargetState
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Target" ;
+  rdfs:subClassOf vcare:State ;
+.
+vcare:TemperatureInCelsiusDegree
+  rdf:type vcare:ObservationFeature ;
+  vcare:featureType vcare:Numerical ;
+  vcare:hasUnit "C°" ;
+  vcare:hasVectorSize 1 ;
+  rdfs:label "Temperature in celsius degree" ;
+.
+vcare:TestACR
+  rdf:type vcare:PhysicianActivity ;
+  rdfs:label "Test ACR" ;
+.
+vcare:TestEGFR
+  rdf:type vcare:PhysicianActivity ;
+  rdfs:label "Test EFGR" ;
+.
+vcare:TestUrin
+  rdf:type vcare:MedicalTest ;
+  rdfs:label "Test urin" ;
 .
 vcare:Ticagrelor
   rdf:type vcare:Antiplatelet ;
@@ -1558,8 +2218,31 @@ vcare:TurnMusicOn
   rdfs:label "Turn music on" ;
   rdfs:subClassOf vcare:ControlEnvironmentActivity ;
 .
+vcare:TurnTVOff
+  rdf:type vcare:AgentActivity ;
+  vcare:hasEffect vcare:ConvertTVState ;
+  rdfs:label "Turn TVOff" ;
+.
+vcare:TurnTVOn
+  rdf:type vcare:AgentActivity ;
+  vcare:hasEffect vcare:ConvertTVState ;
+  rdfs:label "Turn TVOn" ;
+.
+vcare:TurningLightOff
+  rdf:type vcare:AgentActivity ;
+  vcare:hasEffect vcare:DecreaseBrightness ;
+  rdfs:label "Turning light off" ;
+.
+vcare:TurningLightOn
+  rdf:type vcare:AgentActivity ;
+  vcare:hasEffect vcare:IncreaseBrightness ;
+  rdfs:label "Turning light on" ;
+.
 vcare:UrgentReferral
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Urgent referral" ;
+  rdfs:subClassOf vcare:Referral ;
 .
 vcare:UrgentReferralCKD
   rdf:type vcare:HealthState ;
@@ -1568,45 +2251,62 @@ vcare:UrgentReferralCKD
   vcare:hasCondition vcare:eGFRLower15 ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:CKDUrgentReferral ;
   rdfs:label "Urgent referral CKD" ;
-.
-vcare:UrinAnalysis
-  rdf:type vcare:ObservationFeature ;
-  vcare:featureType vcare:Nominal ;
-  vcare:hasVectorSize 1 ;
-  rdfs:label "Urinanalisys" ;
 .
 vcare:UrinAnalysisNotTested
   rdf:type vcare:BooleanCondition ;
   vcare:hasConditionExpression "UrinAnalyisis: 0" ;
-  vcare:hasObservationFeature vcare:UrinAnalysis ;
   rdfs:label "Urin analyse not tested" ;
+.
+vcare:Urinanalysis
+  rdf:type vcare:PhysicianActivity ;
+  rdfs:label "Urinanalysis" ;
 .
 vcare:UrinanalysisTested
   rdf:type vcare:BooleanCondition ;
   vcare:hasCondition vcare:UrinanalysisTested ;
-  vcare:hasConditionExpression "UrinAnalysisTested: 1" ;
-  vcare:hasObservationFeature vcare:UrinAnalysis ;
+  vcare:hasConditionExpression "UrinanalysisTested: 1" ;
   vcare:hasReward 1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
-.
-vcare:UrinaryTractInfection
-  vcare:featureType vcare:Nominal ;
-  vcare:hasConditionExpression "UrinTractInfection: 1" ;
-  vcare:hasObservationFeature vcare:UrinaryTractInfection ;
-  vcare:hasVectorSize 1 ;
+  rdfs:label "Urinanalysis tested" ;
 .
 vcare:UseCase
   rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
   rdfs:label "Use case" ;
   rdfs:subClassOf rdfs:Resource ;
+  sh:property [
+      sh:path vcare:hasState ;
+      sh:class vcare:State ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path vcare:requiresActivity ;
+      sh:class vcare:Activity ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+.
+vcare:UserAbsent
+  rdf:type vcare:BooleanCondition ;
+  vcare:hasConditionExpression "UserInRoom: 0" ;
+  vcare:hasObservationFeature vcare:UserInRoom ;
+  rdfs:label "User absent" ;
+.
+vcare:UserAwayFromTV
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "DistanceToTVInCentimeters: > 1000" ;
+  vcare:hasObservationFeature vcare:DistanceToTVInCentimeters ;
+  rdfs:label "User away from TV" ;
 .
 vcare:UserCanlessAlert
+  rdf:type vcare:ContextState ;
   vcare:hasReward -1 ;
   vcare:hasRisk vcare:FallingRisk ;
   vcare:hasRisk vcare:SlipRisk ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "Can warning" ;
 .
 vcare:UserContextSimulation
   rdf:type vcare:ContextSimulation ;
@@ -1614,20 +2314,10 @@ vcare:UserContextSimulation
 .
 vcare:UserHasCKDRisk
   rdf:type vcare:BooleanCondition ;
+  rdf:type vcare:HealthState ;
   rdf:type vcare:Risk ;
-  vcare:hasCondition vcare:BladderCancer ;
-  vcare:hasCondition vcare:CardioVascularDisease ;
-  vcare:hasCondition vcare:DiabetesMellitusType2 ;
-  vcare:hasCondition vcare:FamilyHistoryStage5CKD ;
   vcare:hasCondition vcare:Hematuria ;
-  vcare:hasCondition vcare:HereditaryCKD ;
   vcare:hasCondition vcare:Hypertension ;
-  vcare:hasCondition vcare:KidneyStones ;
-  vcare:hasCondition vcare:PVD ;
-  vcare:hasCondition vcare:SLE ;
-  vcare:hasCondition vcare:Stroke ;
-  vcare:hasCondition vcare:TIA ;
-  vcare:hasCondition vcare:UrinaryTractInfection ;
   vcare:hasCondition vcare:UserHasHighBloodPressure ;
   vcare:hasCondition vcare:UserHasPreHighBloodpressure ;
   vcare:hasConditionExpression "UserHasCKDRisk: 1" ;
@@ -1642,21 +2332,9 @@ vcare:UserHasCKDRisk
 """ ;
   vcare:hasNextState vcare:UserHasCKDRisk ;
   vcare:hasNextState vcare:UserHasCKDWithDiabetes ;
-  vcare:hasObservationFeature vcare:BladderCancer ;
-  vcare:hasObservationFeature vcare:CardioVascularDisease ;
-  vcare:hasObservationFeature vcare:DiabetesMellitusType2 ;
   vcare:hasObservationFeature vcare:DiastolicValue ;
-  vcare:hasObservationFeature vcare:FamilyHistoryStage5CKD ;
   vcare:hasObservationFeature vcare:Hematuria ;
-  vcare:hasObservationFeature vcare:HereditaryCKD ;
-  vcare:hasObservationFeature vcare:KidneyStones ;
-  vcare:hasObservationFeature vcare:PVD ;
-  vcare:hasObservationFeature vcare:SLE ;
-  vcare:hasObservationFeature vcare:Stroke ;
   vcare:hasObservationFeature vcare:SystolicValue ;
-  vcare:hasObservationFeature vcare:TIA ;
-  vcare:hasObservationFeature vcare:UrinAnalysis ;
-  vcare:hasObservationFeature vcare:UrinaryTractInfection ;
   vcare:hasReward -1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
   vcare:requiresActivity vcare:RetestACR ;
@@ -1664,8 +2342,10 @@ vcare:UserHasCKDRisk
   vcare:requiresActivity vcare:TestACR ;
   vcare:requiresActivity vcare:TestEGFR ;
   vcare:requiresActivity vcare:Urinanalysis ;
+  rdfs:label "User has CKDRisk" ;
 .
 vcare:UserHasCKDWithDiabetes
+  rdf:type vcare:HealthState ;
   vcare:hasCondition vcare:AnormalACR ;
   vcare:hasCondition vcare:AnormalEGFR ;
   vcare:hasCondition vcare:Hematuria ;
@@ -1676,16 +2356,23 @@ vcare:UserHasCKDWithDiabetes
   vcare:hasCondition vcare:UserHasCKDRisk ;
   vcare:hasCondition vcare:UserHasHighBloodPressure ;
   vcare:hasCondition vcare:UserHasPreHighBloodpressure ;
+  vcare:hasNextState vcare:TargetA1C ;
+  vcare:hasNextState vcare:TargetBMI ;
+  vcare:hasNextState vcare:TargetBloodpressure ;
   vcare:hasNextState vcare:TargetFluidIntake ;
   vcare:hasNextState vcare:UserHasCKDRisk ;
   vcare:hasNextState vcare:UserHasCKDWithDiabetes ;
   vcare:hasNextState vcare:WeeklyPhysicalActivity ;
+  vcare:hasReward -1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
   vcare:requiresActivity vcare:ACEiIntakeWithDiabetes ;
   vcare:requiresActivity vcare:ARBIntakeWithDiabetes ;
   vcare:requiresActivity vcare:AlcoholCessation ;
   vcare:requiresActivity vcare:AntiplateletIntakeWithDiabetes ;
   vcare:requiresActivity vcare:BMIControl ;
+  vcare:requiresActivity vcare:CKDEmergentReferral ;
+  vcare:requiresActivity vcare:CKDRoutineReferral ;
+  vcare:requiresActivity vcare:CKDUrgentReferral ;
   vcare:requiresActivity vcare:FastWalking ;
   vcare:requiresActivity vcare:FluidIntakeRegulation ;
   vcare:requiresActivity vcare:HighSeverityHiking ;
@@ -1708,6 +2395,7 @@ vcare:UserHasCKDWithDiabetes
   vcare:requiresActivity vcare:TestEGFR ;
   vcare:requiresActivity vcare:Urinanalysis ;
   vcare:requiresActivity vcare:WaterGymnastic ;
+  rdfs:label "User has CKD" ;
 .
 vcare:UserHasCKDWithoutDiabetes
   rdf:type vcare:HealthState ;
@@ -1766,6 +2454,7 @@ vcare:UserHasHighBloodPressure
   vcare:hasObservationFeature vcare:DiastolicValue ;
   vcare:hasObservationFeature vcare:SystolicValue ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User has high blood pressure" ;
 .
 vcare:UserHasIdealBloodpressure
   rdf:type vcare:RangeCondition ;
@@ -1773,6 +2462,7 @@ vcare:UserHasIdealBloodpressure
   vcare:hasConditionExpression "SystolicValue: 90 - 120" ;
   vcare:hasObservationFeature vcare:DiastolicValue ;
   vcare:hasObservationFeature vcare:SystolicValue ;
+  rdfs:label "User has ideal bloodpressure" ;
 .
 vcare:UserHasLowBloodpressure
   rdf:type vcare:RangeCondition ;
@@ -1781,21 +2471,24 @@ vcare:UserHasLowBloodpressure
   vcare:hasObservationFeature vcare:DiastolicValue ;
   vcare:hasObservationFeature vcare:SystolicValue ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User has low bloodpressure" ;
 .
 vcare:UserHasNoCKD
+  rdf:type vcare:HealthState ;
   vcare:hasCondition vcare:NormalA1C ;
   vcare:hasCondition vcare:NormalACR ;
   vcare:hasCondition vcare:NormalBMI ;
   vcare:hasCondition vcare:NormalEGFR ;
-  vcare:hasCondition vcare:UrinanalysisTested ;
   vcare:hasCondition vcare:UserHasIdealBloodpressure ;
   vcare:hasNextState vcare:UserHasNoCKD ;
   vcare:hasNextState vcare:UserHasNoCKDRisk ;
   vcare:hasReward 0 ;
-  vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:isTargetState "true"^^xsd:boolean ;
+  rdfs:label "User has no CKD" ;
 .
 vcare:UserHasNoCKDRisk
   rdf:type vcare:BooleanCondition ;
+  rdf:type vcare:HealthState ;
   vcare:hasCondition vcare:NoHematuria ;
   vcare:hasCondition vcare:NoPVD ;
   vcare:hasCondition vcare:NoSLE ;
@@ -1811,20 +2504,13 @@ vcare:UserHasNoCKDRisk
   vcare:hasObservationFeature vcare:A1C ;
   vcare:hasObservationFeature vcare:ACR ;
   vcare:hasObservationFeature vcare:BMI ;
-  vcare:hasObservationFeature vcare:CardioVascularDisease ;
-  vcare:hasObservationFeature vcare:DiabetesMellitusType2 ;
   vcare:hasObservationFeature vcare:DiastolicValue ;
   vcare:hasObservationFeature vcare:Hematuria ;
-  vcare:hasObservationFeature vcare:PVD ;
-  vcare:hasObservationFeature vcare:SLE ;
-  vcare:hasObservationFeature vcare:Stroke ;
   vcare:hasObservationFeature vcare:SystolicValue ;
-  vcare:hasObservationFeature vcare:TIA ;
-  vcare:hasObservationFeature vcare:UrinAnalysis ;
-  vcare:hasObservationFeature vcare:UrinaryTractInfection ;
   vcare:hasObservationFeature vcare:eGFR ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User has no CKDRisk" ;
 .
 vcare:UserHasPreHighBloodpressure
   rdf:type vcare:RangeCondition ;
@@ -1833,8 +2519,10 @@ vcare:UserHasPreHighBloodpressure
   vcare:hasObservationFeature vcare:DiastolicValue ;
   vcare:hasObservationFeature vcare:SystolicValue ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User has pre high bloodpressure" ;
 .
 vcare:UserHasToTakeMedication
+  rdf:type vcare:ContextState ;
   vcare:hasNextState vcare:UserHasToTakeMedication ;
   vcare:hasNextState vcare:UserTookACEi ;
   vcare:hasNextState vcare:UserTookARB ;
@@ -1850,38 +2538,119 @@ vcare:UserHasToTakeMedication
   vcare:requiresActivity vcare:AntiplateletIntakeWithoutDiabetes ;
   vcare:requiresActivity vcare:StatinIntakeWithDiabetes ;
   vcare:requiresActivity vcare:StatinIntakeWithoutDiabetes ;
-.
-vcare:UserInBath
-  vcare:hasReward 0 ;
-  vcare:isTargetState "false"^^xsd:boolean ;
-.
-vcare:UserInBedRoom
-  vcare:hasReward 0 ;
-  vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User has to take medication" ;
 .
 vcare:UserInFrontOfTV
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:UserNextToTV ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:TurnTVOn ;
+  rdfs:label "User in front of TV" ;
 .
-vcare:UserInKitchen
-  vcare:hasReward 0 ;
-  vcare:isTargetState "false"^^xsd:boolean ;
+vcare:UserInRoom
+  rdf:type vcare:ObservationFeature ;
+  vcare:featureType vcare:Nominal ;
+  vcare:hasVectorSize 1 ;
+  rdfs:label "User in room" ;
 .
-vcare:UserInLivingRoom
-  vcare:hasReward 0 ;
+vcare:UserInRoomBath
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:UserLocatedInBath ;
+  vcare:hasCondition vcare:UserNotInBed ;
+  vcare:hasCondition vcare:UserNotInCorridor ;
+  vcare:hasCondition vcare:UserNotInKitchen ;
+  vcare:hasCondition vcare:UserNotInLivingRoom ;
+  vcare:hasReward 1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:DecreaseTemperature ;
+  vcare:requiresActivity vcare:DimLight ;
+  vcare:requiresActivity vcare:IncreaseTemperature ;
+  vcare:requiresActivity vcare:TurningLightOff ;
+  vcare:requiresActivity vcare:TurningLightOn ;
+  rdfs:label "User in room bath" ;
+.
+vcare:UserInRoomBed
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:UserLocatedBed ;
+  vcare:hasCondition vcare:UserNotInBath ;
+  vcare:hasCondition vcare:UserNotInCorridor ;
+  vcare:hasCondition vcare:UserNotInKitchen ;
+  vcare:hasCondition vcare:UserNotInLivingRoom ;
+  vcare:hasReward 1 ;
+  vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:DecreaseTemperature ;
+  vcare:requiresActivity vcare:DimLight ;
+  vcare:requiresActivity vcare:IncreaseTemperature ;
+  vcare:requiresActivity vcare:TurnTVOff ;
+  vcare:requiresActivity vcare:TurnTVOn ;
+  vcare:requiresActivity vcare:TurningLightOff ;
+  vcare:requiresActivity vcare:TurningLightOn ;
+  rdfs:label "User in room bed" ;
+.
+vcare:UserInRoomCorridor
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:UserLocatedInCorridor ;
+  vcare:hasCondition vcare:UserNotInBath ;
+  vcare:hasCondition vcare:UserNotInBed ;
+  vcare:hasCondition vcare:UserNotInKitchen ;
+  vcare:hasCondition vcare:UserNotInLivingRoom ;
+  vcare:hasReward 1 ;
+  vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:TurningLightOn ;
+  rdfs:label "User in room corridor" ;
+.
+vcare:UserInRoomKitchen
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:UserLocatedInKitchen ;
+  vcare:hasCondition vcare:UserNotInBath ;
+  vcare:hasCondition vcare:UserNotInBed ;
+  vcare:hasCondition vcare:UserNotInCorridor ;
+  vcare:hasCondition vcare:UserNotInLivingRoom ;
+  vcare:hasReward 1 ;
+  vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:DecreaseTemperature ;
+  vcare:requiresActivity vcare:DimLight ;
+  vcare:requiresActivity vcare:IncreaseTemperature ;
+  vcare:requiresActivity vcare:TurningLightOff ;
+  vcare:requiresActivity vcare:TurningLightOn ;
+  rdfs:label "User in room kitchen" ;
+.
+vcare:UserInRoomLivingRoom
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:UserLocatedInLivingRoom ;
+  vcare:hasCondition vcare:UserNotInBath ;
+  vcare:hasCondition vcare:UserNotInBed ;
+  vcare:hasCondition vcare:UserNotInCorridor ;
+  vcare:hasCondition vcare:UserNotInKitchen ;
+  vcare:hasReward 1 ;
+  vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:DecreaseTemperature ;
+  vcare:requiresActivity vcare:DimLight ;
+  vcare:requiresActivity vcare:IncreaseTemperature ;
+  vcare:requiresActivity vcare:TurnTVOff ;
+  vcare:requiresActivity vcare:TurnTVOn ;
+  vcare:requiresActivity vcare:TurningLightOff ;
+  vcare:requiresActivity vcare:TurningLightOn ;
+  rdfs:label "User in room living room" ;
 .
 vcare:UserInactive
+  rdf:type vcare:ContextState ;
   vcare:hasReward -1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User inactive" ;
 .
 vcare:UserIsEating
+  rdf:type vcare:ContextState ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User is eating" ;
 .
 vcare:UserIsOutdoor
+  rdf:type vcare:ContextState ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User is outdoor" ;
 .
 vcare:UserIsPregnant
   rdf:type vcare:BooleanCondition ;
@@ -1890,48 +2659,180 @@ vcare:UserIsPregnant
   rdfs:label "Pregnancy" ;
 .
 vcare:UserIsSmoking
+  rdf:type vcare:ContextState ;
   vcare:hasReward -1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User is smoking" ;
 .
 vcare:UserIsStressed
+  rdf:type vcare:ContextState ;
   vcare:hasReward -1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User is stressed" ;
 .
 vcare:UserLeavesHome
+  rdf:type vcare:ContextState ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User leaves home" ;
+.
+vcare:UserLocatedBath
+  rdf:type vcare:ObservationFeature ;
+  vcare:featureType vcare:Nominal ;
+  vcare:hasVectorSize 1 ;
+  rdfs:label "User located bath" ;
+.
+vcare:UserLocatedBed
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "UserLocatedBedRoom: 1" ;
+  vcare:hasObservationFeature vcare:UserLocatedBedRoom ;
+  rdfs:label "User located bed" ;
+.
+vcare:UserLocatedBedRoom
+  rdf:type vcare:ObservationFeature ;
+  vcare:featureType vcare:Nominal ;
+  vcare:hasVectorSize 1 ;
+  rdfs:label "User located bed room" ;
+.
+vcare:UserLocatedCorridor
+  rdf:type vcare:ObservationFeature ;
+  vcare:featureType vcare:Nominal ;
+  vcare:hasVectorSize 1 ;
+  rdfs:label "User located corridor" ;
+.
+vcare:UserLocatedInBath
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "UserLocatedBath: 1" ;
+  vcare:hasObservationFeature vcare:UserLocatedBath ;
+  rdfs:label "User located in bath" ;
+.
+vcare:UserLocatedInCorridor
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "UserLocatedCorridor: 1" ;
+  vcare:hasObservationFeature vcare:UserLocatedCorridor ;
+  rdfs:label "User located in corridor" ;
+.
+vcare:UserLocatedInKitchen
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "UserLocatedKitchen: 1" ;
+  vcare:hasObservationFeature vcare:UserLocatedKitchen ;
+  rdfs:label "User located in kitchen" ;
+.
+vcare:UserLocatedInLivingRoom
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "UserLocatedLivingRoom: 1" ;
+  vcare:hasObservationFeature vcare:UserLocatedLivingRoom ;
+  rdfs:label "User located in living room" ;
+.
+vcare:UserLocatedKitchen
+  rdf:type vcare:ObservationFeature ;
+  vcare:featureType vcare:Nominal ;
+  vcare:hasVectorSize 1 ;
+  rdfs:label "User located kitchen" ;
+.
+vcare:UserLocatedLivingRoom
+  rdf:type vcare:ObservationFeature ;
+  vcare:featureType vcare:Nominal ;
+  vcare:hasVectorSize 1 ;
+  rdfs:label "User located livingroom" ;
 .
 vcare:UserMovesFast
+  rdf:type vcare:ContextState ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User moves fast" ;
 .
 vcare:UserMovesSlow
+  rdf:type vcare:ContextState ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User moves slow" ;
+.
+vcare:UserNextToTV
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "DistanceToTVInCentimeters: <= 500" ;
+  vcare:hasObservationFeature vcare:DistanceToTVInCentimeters ;
+  rdfs:label "User next to TV" ;
+.
+vcare:UserNotInBath
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "UserLocatedBath: 0" ;
+  vcare:hasObservationFeature vcare:UserLocatedBath ;
+  rdfs:label "User not in bath" ;
+.
+vcare:UserNotInBed
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "UserLocatedBedRoom: 0" ;
+  vcare:hasObservationFeature vcare:UserLocatedBedRoom ;
+  rdfs:label "User not in bed" ;
+.
+vcare:UserNotInCorridor
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "UserLocatedCorridor: 0" ;
+  vcare:hasObservationFeature vcare:UserLocatedCorridor ;
+  rdfs:label "User not in corridor" ;
+.
+vcare:UserNotInFrontOfTV
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:UserAwayFromTV ;
+  vcare:hasReward 0 ;
+  vcare:isTargetState "false"^^xsd:boolean ;
+  vcare:requiresActivity vcare:TurnTVOff ;
+  rdfs:label "User not in front of TV" ;
+.
+vcare:UserNotInKitchen
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "UserLocatedKitchen: 0" ;
+  vcare:hasObservationFeature vcare:UserLocatedKitchen ;
+  rdfs:label "User not in kitchen" ;
+.
+vcare:UserNotInLivingRoom
+  rdf:type vcare:Condition ;
+  vcare:hasConditionExpression "UserLocatedLivingRoom: 0" ;
+  vcare:hasObservationFeature vcare:UserLocatedLivingRoom ;
+  rdfs:label "User not in living room" ;
 .
 vcare:UserPlaysMedicalGame
+  rdf:type vcare:ContextState ;
   vcare:hasReward 1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User plays medical game" ;
+.
+vcare:UserPresent
+  rdf:type vcare:BooleanCondition ;
+  vcare:hasConditionExpression "UserInRoom: 1" ;
+  vcare:hasObservationFeature vcare:UserInRoom ;
+  rdfs:label "User present" ;
 .
 vcare:UserReadyToStart
+  rdf:type vcare:ContextState ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User ready to start" ;
 .
 vcare:UserSittingOnTheSofa
+  rdf:type vcare:ContextState ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User sitting on the sofa" ;
 .
 vcare:UserSleeps
+  rdf:type vcare:ContextState ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User sleeps" ;
 .
 vcare:UserSwitchesTabletOff
+  rdf:type vcare:ContextState ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User switches tablet off" ;
 .
 vcare:UserSwitchesTabletOn
+  rdf:type vcare:ContextState ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User switches tablet on" ;
 .
 vcare:UserTookACEi
   rdf:type vcare:ContextState ;
@@ -1958,12 +2859,30 @@ vcare:UserTookStatin
   rdfs:label "User took statin" ;
 .
 vcare:UserWatchesVideoTutorial
+  rdf:type vcare:ContextState ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User watches video tutorial" ;
+.
+vcare:UserWatchingTV
+  rdf:type vcare:ContextState ;
+  vcare:hasCondition vcare:TVStateOn ;
+  vcare:hasCondition vcare:UserNextToTV ;
+  vcare:hasReward 1 ;
+  vcare:isTargetState "true"^^xsd:boolean ;
+  vcare:requiresActivity vcare:DecreaseTemperature ;
+  vcare:requiresActivity vcare:DimLight ;
+  vcare:requiresActivity vcare:IncreaseTemperature ;
+  vcare:requiresActivity vcare:TurnTVOff ;
+  vcare:requiresActivity vcare:TurningLightOff ;
+  vcare:requiresActivity vcare:TurningLightOn ;
+  rdfs:label "User watching TV" ;
 .
 vcare:UserWeaksUp
+  rdf:type vcare:ContextState ;
   vcare:hasReward 0 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "User weaks up" ;
 .
 vcare:Value
   rdf:type rdfs:Class ;
@@ -1972,7 +2891,7 @@ vcare:Value
   rdfs:subClassOf rdfs:Resource ;
   sh:property [
       sh:path vcare:hasDataType ;
-      sh:class <http://schema.org/DataType> ;
+      sh:class rdfs:Datatype ;
       sh:maxCount 1 ;
       sh:minCount 1 ;
       sh:name "has data type" ;
@@ -1998,10 +2917,16 @@ vcare:ValueCondition
   rdfs:subClassOf vcare:Condition ;
 .
 vcare:VascularDisease
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Vascular disease" ;
+  rdfs:subClassOf vcare:Disease ;
 .
 vcare:VascularDiseasePatient
+  rdf:type rdfs:Class ;
   rdf:type sh:NodeShape ;
+  rdfs:label "Vascular disease patient" ;
+  rdfs:subClassOf vcare:Patient ;
 .
 vcare:Vorapaxar
   rdf:type vcare:Antiplatelet ;
@@ -2064,8 +2989,15 @@ vcare:Weight
   rdfs:label "Weight" ;
 .
 vcare:WetSurface
+  rdf:type vcare:ContextState ;
   vcare:hasReward -1 ;
   vcare:isTargetState "false"^^xsd:boolean ;
+  rdfs:label "Wet surface" ;
+.
+vcare:consistsOfActivity
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "consists of activity" ;
+  rdfs:range vcare:Activity ;
 .
 vcare:eGFR
   rdf:type vcare:ObservationFeature ;
@@ -2097,6 +3029,20 @@ vcare:featureType
   rdfs:label "feature type" ;
   rdfs:range vcare:FeatureType ;
 .
+vcare:hasAction
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has action" ;
+.
+vcare:hasActivity
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has activity" ;
+  rdfs:range vcare:Activity ;
+.
+vcare:hasAge
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has age" ;
+  rdfs:range xsd:integer ;
+.
 vcare:hasCompetency
   rdf:type owl:ObjectProperty ;
   rdfs:label "has competency" ;
@@ -2111,6 +3057,36 @@ vcare:hasConditionExpression
   rdfs:label "has condition expression" ;
   rdfs:range xsd:string ;
 .
+vcare:hasConstraint
+  rdf:type rdf:Property ;
+  rdfs:label "has constraint" ;
+.
+vcare:hasCriterion
+  rdf:type rdf:Property ;
+  rdfs:label "has criterion" ;
+.
+vcare:hasDescription
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has description" ;
+.
+vcare:hasDiagnose
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has diagnose" ;
+.
+vcare:hasDiastolicBloodpressure
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has diastolic bloodpressure" ;
+  rdfs:range xsd:decimal ;
+.
+vcare:hasDisease
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has disease" ;
+  rdfs:range vcare:Disease ;
+.
+vcare:hasDuration
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has duration" ;
+.
 vcare:hasEffect
   rdf:type owl:ObjectProperty ;
   rdfs:label "has effect" ;
@@ -2120,23 +3096,51 @@ vcare:hasEvent
   rdf:type owl:ObjectProperty ;
   rdfs:label "has event" ;
 .
+vcare:hasExpertise
+  rdf:type rdf:Property ;
+  rdfs:label "has expertise" ;
+.
 vcare:hasExpression
   rdf:type owl:DatatypeProperty ;
   rdfs:label "has expression" ;
   rdfs:range xsd:string ;
+.
+vcare:hasFeatureSize
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has feature size" ;
+  rdfs:range xsd:integer ;
+.
+vcare:hasGender
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has gender" ;
 .
 vcare:hasInteractionText
   rdf:type owl:DatatypeProperty ;
   rdfs:label "has interaction text" ;
   rdfs:range xsd:string ;
 .
+vcare:hasLabel
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has label" ;
+  rdfs:range xsd:string ;
+.
 vcare:hasLevel
   rdf:type owl:ObjectProperty ;
   rdfs:label "has level" ;
 .
+vcare:hasName
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has name" ;
+  rdfs:range xsd:string ;
+.
 vcare:hasNextAction
   rdf:type owl:ObjectProperty ;
   rdfs:label "has next action" ;
+.
+vcare:hasNextState
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has next state" ;
+  rdfs:range vcare:State ;
 .
 vcare:hasPreference
   rdf:type owl:ObjectProperty ;
@@ -2152,6 +3156,83 @@ vcare:hasPreviousAction
   rdf:type owl:ObjectProperty ;
   rdfs:label "has previous action" ;
 .
+vcare:hasPreviousState
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has previous state" ;
+  rdfs:range vcare:State ;
+.
+vcare:hasPriority
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has priority" ;
+  rdfs:range xsd:string ;
+.
+vcare:hasRangeEnd
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has range end" ;
+  rdfs:range xsd:decimal ;
+.
+vcare:hasRangeStart
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has range start" ;
+  rdfs:range xsd:decimal ;
+.
+vcare:hasReward
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has reward" ;
+  rdfs:range xsd:integer ;
+.
+vcare:hasRisk
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has risk" ;
+.
+vcare:hasRule
+  rdf:type rdf:Property ;
+  rdfs:label "has rule" ;
+  rdfs:range xsd:string ;
+.
+vcare:hasSPARQLQuery
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "vcarehas SPARQLQuery" ;
+  rdfs:range xsd:string ;
+.
+vcare:hasStage
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has stage" ;
+  rdfs:range xsd:integer ;
+.
+vcare:hasState
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has state" ;
+  rdfs:range vcare:State ;
+.
+vcare:hasStateSize
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has state size" ;
+  rdfs:range xsd:integer ;
+.
+vcare:hasStatus
+  rdf:type rdf:Property ;
+  rdfs:label "has status" ;
+.
+vcare:hasSubAction
+  rdf:type rdf:Property ;
+  rdfs:label "has sub action" ;
+.
+vcare:hasSymptom
+  rdf:type rdf:Property ;
+  rdfs:label "has symptom" ;
+  rdfs:range vcare:HealthState ;
+.
+vcare:hasSystolicBloodpressure
+  rdf:type rdf:Property ;
+  rdfs:label "has systolic bloodpressure" ;
+  rdfs:range xsd:decimal ;
+.
+vcare:hasTarget
+  rdf:type rdf:Property ;
+  rdfs:label "has target" ;
+  rdfs:range vcare:TargetState ;
+.
 vcare:hasTransition
   rdf:type owl:ObjectProperty ;
   rdfs:label "has transition" ;
@@ -2161,10 +3242,19 @@ vcare:hasTransitionProbability
   rdfs:label "has transition probability" ;
   rdfs:range xsd:decimal ;
 .
+vcare:hasType
+  rdf:type rdf:Property ;
+  rdfs:label "has type" ;
+.
 vcare:hasUnit
   rdf:type owl:DatatypeProperty ;
   rdfs:label "has unit" ;
   rdfs:range xsd:string ;
+.
+vcare:hasValue
+  rdf:type owl:DatatypeProperty ;
+  rdfs:label "has value" ;
+  rdfs:range xsd:decimal ;
 .
 vcare:hasValueSize
   rdf:type owl:DatatypeProperty ;
@@ -2176,20 +3266,98 @@ vcare:hasVectorSize
   rdfs:label "has vector size" ;
   rdfs:range xsd:integer ;
 .
+vcare:isExpertIn
+  rdf:type rdf:Property ;
+  rdfs:label "is expert in" ;
+.
+vcare:isInState
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "is in state" ;
+  rdfs:range vcare:State ;
+.
+vcare:isInterestedInState
+  rdf:type rdf:Property ;
+  rdfs:label "is interested in state" ;
+.
+vcare:isPregnant
+  rdf:type rdf:Property ;
+  rdfs:label "is pregnant" ;
+  rdfs:range xsd:boolean ;
+.
+vcare:isSmoker
+  rdf:type rdf:Property ;
+  rdfs:label "is smoker" ;
+  rdfs:range xsd:boolean ;
+.
+vcare:isState
+  rdf:type rdf:Property ;
+  rdfs:label "is state" ;
+  rdfs:range xsd:boolean ;
+.
 vcare:isTargetState
   rdf:type owl:DatatypeProperty ;
   rdfs:label "is target state" ;
   rdfs:range xsd:boolean ;
+.
+vcare:performsActivity
+  rdf:type rdf:Property ;
+  rdfs:label "performs activity" ;
+.
+vcare:performsExercise
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "performs exercise" ;
+.
+vcare:playsGame
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "plays game" ;
+.
+vcare:provides
+  rdf:type rdf:Property ;
+  rdfs:label "provides event" ;
+  rdfs:range vcare:State ;
+.
+vcare:recommendsDrug
+  rdf:type rdf:Property ;
+  rdfs:label "recommends drug" ;
+  rdfs:range vcare:Drug ;
+.
+vcare:requiresActivity
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "requires activity" ;
+  rdfs:range vcare:Activity ;
+.
+vcare:requiresDrug
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "requires drug" ;
+  rdfs:range vcare:Drug ;
+.
+vcare:requiresMedicalPerson
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "requires medical person" ;
+.
+vcare:requiresPhysician
+  rdf:type rdf:Property ;
+  rdfs:label "requires physician" ;
+  rdfs:subPropertyOf vcare:requiresMedicalPerson ;
 .
 vcare:requiresService
   rdf:type owl:ObjectProperty ;
   rdfs:label "requires service" ;
   rdfs:range vcare:Service ;
 .
+vcare:requiresTest
+  rdf:type rdf:Property ;
+  rdfs:label "requires test" ;
+.
 vcare:simulatesUseCase
   rdf:type owl:ObjectProperty ;
   rdfs:label "simulates use case" ;
   rdfs:range vcare:UseCase ;
+.
+vcare:subscribesFor
+  rdf:type rdf:Property ;
+  rdfs:label "subscribes for" ;
+  rdfs:range vcare:State ;
 .
 vcare:targetsActivity
   rdf:type owl:ObjectProperty ;
@@ -2199,14 +3367,10 @@ vcare:targetsActivity
 <http://vcare.eu/vcare.shapes>
   rdf:type owl:Ontology ;
   owl:imports <http://datashapes.org/dash> ;
-  owl:imports <http://datashapes.org/schema> ;
-  owl:imports <http://topbraid.org/schema.ui> ;
-  owl:imports <http://topbraid.org/schema/> ;
-  owl:imports <http://topbraid.org/schema/schema-single-range> ;
-  owl:imports <http://topbraid.org/schemaconverter> ;
-  owl:imports <http://topbraid.org/spin/schemaspin> ;
-  owl:imports <http://vcare.eu/vcare> ;
-  owl:imports <http://www.fao.org/countryprofiles/geoinfo/geopolitical/resource/geopolitical.owl> ;
+.
+sh:hasImpact
+  rdf:type owl:ObjectProperty ;
+  rdfs:label "has impact" ;
 .
 [
   sh:class vcare:Activity ;
