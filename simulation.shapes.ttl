@@ -1,0 +1,229 @@
+# baseURI: http://vcare-project.eu/simulation
+# imports: http://datashapes.org/dash
+
+@prefix : <http://vcare-project.eu/simulation#> .
+@prefix dash: <http://datashapes.org/dash#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://vcare-project.eu/simulation>
+  rdf:type owl:Ontology ;
+  owl:imports <http://datashapes.org/dash> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+:Activity
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Activity" ;
+  rdfs:subClassOf rdfs:Resource ;
+  sh:property [
+      sh:path :hasDuration ;
+      sh:datatype xsd:decimal ;
+      sh:name "has duration" ;
+    ] ;
+  sh:property [
+      sh:path :hasDurationUnit ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "has duration unit" ;
+    ] ;
+  sh:property [
+      sh:path :hasEffect ;
+      sh:class :Effect ;
+      sh:minCount 1 ;
+      sh:name "has effect" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path :hasFrequency ;
+      sh:datatype xsd:integer ;
+      sh:name "has frequency" ;
+    ] ;
+  sh:property [
+      sh:path :hasStopCondition ;
+      sh:class :Condition ;
+      sh:maxCount 1 ;
+      sh:name "has stop condition" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+.
+:CONVERT
+  rdf:type :ImpactType ;
+  rdfs:label "CONVERT" ;
+.
+:Condition
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Condition" ;
+  rdfs:subClassOf rdfs:Resource ;
+  sh:property [
+      sh:path :hasConditionExpression ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "has condition expression" ;
+    ] ;
+  sh:property [
+      sh:path :hasObservationFeature ;
+      sh:class :ObservationFeature ;
+      sh:minCount 1 ;
+      sh:name "has observation feature" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+.
+:DECREASE
+  rdf:type :ImpactType ;
+  rdfs:label "DECREASE" ;
+.
+:Effect
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Effect" ;
+  rdfs:subClassOf rdfs:Resource ;
+  sh:property [
+      sh:path :hasImpactType ;
+      sh:class :ImpactType ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "has impact type" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path :hasImpactValueRange ;
+      sh:datatype xsd:decimal ;
+      sh:maxCount 1 ;
+      sh:name "has impact value range" ;
+    ] ;
+  sh:property [
+      sh:path :hasObservationFeature ;
+      sh:class :ObservationFeature ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "has observation feature" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path :hasPunishmentRule ;
+      sh:class :Condition ;
+      sh:maxCount 1 ;
+      sh:name "has punishment rule" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path :hasRewardRule ;
+      sh:class :Condition ;
+      sh:maxCount 1 ;
+      sh:minCount 0 ;
+      sh:name "has reward rule" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+.
+:FeatureType
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Feature type" ;
+  rdfs:subClassOf rdfs:Resource ;
+.
+:INCREASE
+  rdf:type :ImpactType ;
+  rdfs:label "INCREASE" ;
+.
+:ImpactType
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Impact type" ;
+  rdfs:subClassOf rdfs:Resource ;
+.
+:NOMINAL
+  rdf:type :FeatureType ;
+  rdfs:label "NOMINAL" ;
+.
+:NUMERIC
+  rdf:type :FeatureType ;
+  rdfs:label "NUMERIC" ;
+.
+:ObservationFeature
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Observation feature" ;
+  rdfs:subClassOf rdfs:Resource ;
+  sh:property [
+      sh:path :featureType ;
+      sh:class :FeatureType ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "feature type" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path :hasRangeEnd ;
+      sh:datatype xsd:decimal ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "has range end" ;
+    ] ;
+  sh:property [
+      sh:path :hasRangeStart ;
+      sh:datatype xsd:decimal ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "has range start" ;
+    ] ;
+  sh:property [
+      sh:path :hasUnit ;
+      sh:datatype xsd:string ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "has unit" ;
+    ] ;
+.
+:SimulationTask
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Simulation task" ;
+  rdfs:subClassOf rdfs:Resource ;
+  sh:property [
+      sh:path :simulatesUseCase ;
+      sh:class :UseCase ;
+      sh:minCount 1 ;
+      sh:name "simulates use case" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+.
+:State
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "State" ;
+  rdfs:subClassOf rdfs:Resource ;
+  sh:property [
+      sh:path :hasCondition ;
+      sh:class :Condition ;
+      sh:minCount 1 ;
+      sh:name "has condition" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+  sh:property [
+      sh:path :isTarget ;
+      sh:datatype xsd:boolean ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "is target" ;
+    ] ;
+.
+:UseCase
+  rdf:type rdfs:Class ;
+  rdf:type sh:NodeShape ;
+  rdfs:label "Use case" ;
+  rdfs:subClassOf rdfs:Resource ;
+  sh:property [
+      sh:path :requiresActivity ;
+      sh:class :Activity ;
+      sh:minCount 1 ;
+      sh:name "requires activity" ;
+      sh:nodeKind sh:IRI ;
+    ] ;
+.
